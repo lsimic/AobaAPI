@@ -1,0 +1,9 @@
+target_sources(
+	${PROJECT_NAME}
+	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/MakeEdge.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MakeEdgeVert.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MakeFace.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MakeVert.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MakeLoop.cpp
+)

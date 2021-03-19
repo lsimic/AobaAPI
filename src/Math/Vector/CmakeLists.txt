@@ -1,0 +1,7 @@
+target_sources(
+	${PROJECT_NAME}
+	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/Vector2.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Vector3.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Vector4.cpp
+)
