@@ -90,26 +90,26 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
 
             for(int k = 0; k < loops.size(); ++k) {
                 // check if loop vert is copied, push to loopverts
-                if(loops.at(k)->Vert()->flagsIntern & COPIED) {
-                    loopVerts.push_back(newVerts.at(loops.at(k)->Vert()->index));
+                if(loops.at(k)->LoopVert()->flagsIntern & COPIED) {
+                    loopVerts.push_back(newVerts.at(loops.at(k)->LoopVert()->index));
                 } else {
                     Core::Vert* newv = new Core::Vert();
                     Core::MakeVert(m, newv);
 
-                    newv->co = loops.at(k)->Vert()->co;
-                    loops.at(k)->Vert()->flagsIntern = COPIED;
-                    loops.at(k)->Vert()->index = vertIdx;
+                    newv->co = loops.at(k)->LoopVert()->co;
+                    loops.at(k)->LoopVert()->flagsIntern = COPIED;
+                    loops.at(k)->LoopVert()->index = vertIdx;
                     vertIdx++;
                     newVerts.push_back(newv);
                     loopVerts.push_back(newv);
                 }
 
                 // check if loop edge is copied, push to loopedges
-                if(loops.at(k)->Edge()->flagsIntern & COPIED) {
-                    loopEdges.push_back(newEdges.at(loops.at(k)->Edge()->index));
+                if(loops.at(k)->LoopEdge()->flagsIntern & COPIED) {
+                    loopEdges.push_back(newEdges.at(loops.at(k)->LoopEdge()->index));
                 } else {
                     Core::Edge* newe = new Core::Edge();
-                    Core::Edge* current = loops.at(k)->Edge();
+                    Core::Edge* current = loops.at(k)->LoopEdge();
                     current->index = edgeIdx;
                     current->flagsIntern = COPIED;
                     edgeIdx++;
@@ -190,18 +190,18 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
             std::vector<Core::Loop*> loops = faceLoopLists.at(j)->Loops();
 
             for(int k = 0; k < loops.size(); ++k) {
-                loops.at(k)->Vert()->flagsIntern = 0;
-                loops.at(k)->Vert()->index = 0;
+                loops.at(k)->LoopVert()->flagsIntern = 0;
+                loops.at(k)->LoopVert()->index = 0;
 
-                if(loops.at(k)->Edge()->flagsIntern) {
-                    loops.at(k)->Edge()->Verts().at(0)->index = 0;
-                    loops.at(k)->Edge()->Verts().at(0)->flagsIntern = 0;
-                    loops.at(k)->Edge()->Verts().at(1)->index = 0;
-                    loops.at(k)->Edge()->Verts().at(1)->flagsIntern = 0;
+                if(loops.at(k)->LoopEdge()->flagsIntern) {
+                    loops.at(k)->LoopEdge()->Verts().at(0)->index = 0;
+                    loops.at(k)->LoopEdge()->Verts().at(0)->flagsIntern = 0;
+                    loops.at(k)->LoopEdge()->Verts().at(1)->index = 0;
+                    loops.at(k)->LoopEdge()->Verts().at(1)->flagsIntern = 0;
                 }
 
-                loops.at(k)->Edge()->flagsIntern = 0;
-                loops.at(k)->Edge()->index = 0;
+                loops.at(k)->LoopEdge()->flagsIntern = 0;
+                loops.at(k)->LoopEdge()->index = 0;
             }
         }
     }

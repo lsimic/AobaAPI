@@ -10,11 +10,11 @@
 namespace Aoba {
 namespace Core {
 
-Vert* Loop::Vert() const {
+Vert* Loop::LoopVert() const {
     return v;
 }
 
-Edge* Loop::Edge() const {
+Edge* Loop::LoopEdge() const {
     return e;
 }
 

@@ -40,8 +40,8 @@ class Loop {
 
   public:
     Loop();
-    Vert* Vert() const;
-    Edge* Edge() const;
+    Vert* LoopVert() const;
+    Edge* LoopEdge() const;
 };
 
 } // namespace Core

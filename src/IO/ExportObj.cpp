@@ -28,7 +28,7 @@ void ExportObj(std::string path, Core::Mesh* mesh) {
         std::vector<Core::Loop*> loops = faces.at(i)->LoopLists().at(0)->Loops();
 
         for(std::size_t j = 0; j < loops.size(); ++j) {
-            outFile << loops.at(j)->Vert()->index << " ";
+            outFile << loops.at(j)->LoopVert()->index << " ";
         }
 
         outFile << "\n";
