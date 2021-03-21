@@ -4,6 +4,8 @@
 #include "AobaAPI/Core/Mesh/Loop.hpp"
 #include "AobaAPI/Core/Mesh/Vert.hpp"
 
+#include <algorithm>
+
 namespace Aoba {
 namespace Core {
 

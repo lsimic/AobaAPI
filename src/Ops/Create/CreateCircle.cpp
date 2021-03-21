@@ -1,5 +1,7 @@
 #include "AobaAPI/Ops/Create.hpp"
 
+#include <cmath>
+
 namespace Aoba {
 namespace Ops {
 

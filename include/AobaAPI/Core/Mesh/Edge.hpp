@@ -3,6 +3,7 @@
 
 #include "../EulerOps.hpp"
 
+#include <cstdint>
 #include <vector>
 
 namespace Aoba {

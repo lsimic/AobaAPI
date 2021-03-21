@@ -3,6 +3,8 @@
 
 #include "../EulerOps.hpp"
 
+#include <cstdint>
+
 namespace Aoba {
 namespace Core {
 

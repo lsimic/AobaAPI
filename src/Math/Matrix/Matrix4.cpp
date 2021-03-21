@@ -4,6 +4,7 @@
 #include "AobaAPI/Math/Vector/Vector3.hpp"
 
 #include <algorithm>
+#include <cmath>
 
 namespace Aoba {
 namespace Math {

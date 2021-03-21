@@ -3,6 +3,9 @@
 #include "AobaAPI/Core/Mesh/Edge.hpp"
 #include "AobaAPI/Core/Mesh/Loop.hpp"
 
+#include <algorithm>
+#include <cmath>
+
 namespace Aoba {
 namespace Core {
 

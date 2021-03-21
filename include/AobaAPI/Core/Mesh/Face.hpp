@@ -4,6 +4,7 @@
 #include "../../Math/Vector/Vector3.hpp"
 #include "../EulerOps.hpp"
 
+#include <cstdint>
 #include <vector>
 
 namespace Aoba {

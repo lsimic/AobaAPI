@@ -1,6 +1,7 @@
 #include "AobaAPI/Math/Matrix/Matrix2.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <stdexcept>
 
 namespace Aoba {
