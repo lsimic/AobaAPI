@@ -17,6 +17,47 @@ class CreateCircleResult {
 
 const CreateCircleResult CreateCircle(Core::Mesh* m, unsigned vertCount, float radius);
 
+class CreateCubeResult {
+  public:
+    std::vector<Core::Vert*> verts;
+    std::vector<Core::Edge*> edges;
+    std::vector<Core::Face*> Faces;
+};
+
+const CreateCubeResult CreateCube(Core::Mesh* m, float size);
+
+class CreateGridResult {
+  public:
+    std::vector<Core::Vert*> innerVerts;
+    std::vector<Core::Vert*> outerVerts;
+    std::vector<Core::Edge*> innerEdges;
+    std::vector<Core::Edge*> outerEdges;
+    std::vector<Core::Face*> innerFaces;
+    std::vector<Core::Face*> outerFaces;
+};
+
+const CreateGridResult CreateGrid(Core::Mesh* m, unsigned divisions, float size);
+
+class CreateIcoSphereResult {
+  public:
+    std::vector<Core::Vert*> verts;
+    std::vector<Core::Edge*> edges;
+    std::vector<Core::Face*> Faces;
+};
+
+const CreateIcoSphereResult CreateIcoSphere(Core::Mesh* m, float radius, unsigned divisions);
+
+class CreateUvSphereResult {
+  public:
+    std::vector<Core::Vert*> verts;
+    std::vector<Core::Edge*> edges;
+    std::vector<Core::Face*> Faces;
+};
+
+const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, unsigned rings, unsigned segments);
+
+Core::Vert* CreateVert(Core::Mesh* m, Math::Vec3 co);
+
 } // namespace Ops
 } // namespace Aoba
 

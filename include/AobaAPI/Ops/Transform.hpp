@@ -15,6 +15,8 @@ void Translate(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const Math:
 
 void Scale(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const Math::Vec3& center, const Math::Vec3& vec);
 
+void Transform(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const Math::Mat4 matrix);
+
 } // namespace Ops
 } // namespace Aoba
 
