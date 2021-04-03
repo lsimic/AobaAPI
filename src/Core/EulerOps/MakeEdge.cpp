@@ -39,12 +39,11 @@ void MakeEdge(Vert* v1, Vert* v2, Edge* newe) {
     } else {
         // v already has some edges
         Edge* current = v1->e;
-        Edge* prev = v1->e->Prev(v1);
-        Edge* next = v1->e->Next(v1);
+        Edge* prev = current->Prev(v1);
         v1->e = newe;
 
         newe->v1Prev = prev;
-        newe->v1Next = next;
+        newe->v1Next = current;
 
         // must check wether v1 is v1 or v2 in current and previous edge
         if(current->v1 == v1) {
@@ -70,11 +69,10 @@ void MakeEdge(Vert* v1, Vert* v2, Edge* newe) {
         // v already has some edges
         Edge* current = v2->e;
         Edge* prev = v2->e->Prev(v2);
-        Edge* next = v2->e->Next(v2);
         v2->e = newe;
 
         newe->v2Prev = prev;
-        newe->v2Next = next;
+        newe->v2Next = current;
 
         // must check wether v2 is v1 or v2 in current and previous edge
         if(current->v1 == v2) {
@@ -89,6 +87,8 @@ void MakeEdge(Vert* v1, Vert* v2, Edge* newe) {
             prev->v2Next = newe;
         }
     }
+
+    // TODO: this likely does not work if v1 == v2
 }
 
 } // namespace Core

@@ -139,14 +139,18 @@ bool Edge::IsWire() const {
 
 const std::vector<Face*> Edge::Faces() const {
     std::vector<Face*> result = std::vector<Face*>();
+    if(this->l == nullptr) {
+        return result;
+    }
+
     Loop* currentLoop = this->l;
-    while(currentLoop->eNext != this->l) {
+    do {
         if(std::find(result.begin(), result.end(), currentLoop->f) == result.end()) { // check if face already added
             // face not present, add to result
             result.push_back(currentLoop->f);
         }
         currentLoop = currentLoop->eNext;
-    }
+    } while(currentLoop != this->l);
     return result;
 }
 

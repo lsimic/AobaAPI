@@ -13,6 +13,7 @@ void ExportObj(std::string path, Core::Mesh* mesh) {
 
     std::vector<Core::Vert*> verts = mesh->Verts();
     std::vector<Core::Face*> faces = mesh->Faces();
+    std::vector<Core::Edge*> edges = mesh->Edges();
 
     for(std::size_t i = 0; i < verts.size(); ++i) {
         outFile << "v " << verts.at(i)->co.x << " " << verts.at(i)->co.y << " " << verts.at(i)->co.z << " \n";
@@ -33,6 +34,17 @@ void ExportObj(std::string path, Core::Mesh* mesh) {
 
         outFile << "\n";
     }
+
+    for(std::size_t i = 0; i < edges.size(); ++i) {
+        outFile << "l ";
+        for(std::size_t j = 0; j < 2; ++j) {
+            outFile << edges.at(i)->Verts().at(j)->index << " ";
+        }
+
+        outFile << "\n";
+    }
+
+
 
     outFile.close();
 }

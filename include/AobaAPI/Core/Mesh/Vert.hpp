@@ -17,6 +17,9 @@ class Face;
 class Vert {
     friend class Mesh;
 
+    friend void KillEdge(Edge*);
+    friend void KillMesh(Mesh*);
+    friend void KillVert(Vert*);
     friend void MakeEdge(Vert*, Vert*, Edge*);
     friend void MakeEdgeVert(Vert*, Edge*, Vert*);
     friend void MakeFace(std::vector<Edge*>, Face*);

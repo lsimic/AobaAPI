@@ -10,7 +10,7 @@ void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv) {
     // add newv to the mesh.
     // no need to check for nullptr since v is already in the mesh.
     Mesh* m = v->m;
-    newv->m = m; 
+    newv->m = m;
     m->verts->mPrev->mNext = newv;
     newv->mPrev = m->verts->mPrev;
     m->verts->mPrev = newv;
@@ -18,7 +18,7 @@ void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv) {
     m->verts = newv;
 
     // add newe to the mesh.
-    // mesh might not have any edges at this point. 
+    // mesh might not have any edges at this point.
     newe->m = m;
     if(m->edges == nullptr) {
         // empty mesh case
@@ -54,8 +54,7 @@ void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv) {
     } else {
         // v already has some edges
         Edge* current = v->e;
-        Edge* prev = v->e->Prev(v);
-        Edge* next = v->e->Next(v);
+        Edge* prev = current->Prev(v);
         v->e = newe;
 
         newe->v1Prev = prev;

@@ -16,6 +16,7 @@ class Edge;
 class Vert;
 
 class FaceLoopList {
+    friend void KillFace(Face*);
     friend void MakeFace(std::vector<Edge*>, Face*);
     friend void MakeFace(std::vector<Loop*>, Face*);
 
@@ -37,6 +38,8 @@ class FaceLoopList {
 };
 
 class Face {
+    friend void KillFace(Face*);
+    friend void KillMesh(Mesh*);
     friend void MakeFace(std::vector<Edge*>, Face*);
     friend void MakeFace(std::vector<Loop*>, Face*);
 

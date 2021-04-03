@@ -31,9 +31,9 @@ void MakeLoop(std::vector<Edge*> edges, std::vector<Vert*> verts, Loop* first) {
         // add the new loop to edge
         // no existing loops using edge
         if(currentEdge->l == nullptr) {
+            currentEdge->l = newl;
             newl->eNext = newl;
             newl->ePrev = newl;
-            currentEdge->l = newl;
         } else {
             // edge already has some adjecent loops
             Loop* currentLoop = currentEdge->l;

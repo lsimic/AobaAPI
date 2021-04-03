@@ -140,15 +140,16 @@ void MakeFace(std::vector<Loop*> loops, Face* newf) {
     fllists.at(0)->prev = fllists.back();
     fllists.back()->next = fllists.at(0);
 
-    // link the loops with the new face.
+    // set the first looplist of the face
     newf->loops = fllists.at(0);
-    for(std::size_t i = 1; i < fllists.size(); i++) {
+    // make all loops point to the face.
+    for(std::size_t i = 0; i < fllists.size(); i++) {
         Loop* current = fllists.at(i)->first;
 
-        current->f = newf;
-        while(current->fNext != fllists.at(i)->first) {
+        do {
             current->f = newf;
-        }
+            current = current->fNext;
+        } while(current != fllists.at(i)->first);
     }
 
     // add newf to mesh
