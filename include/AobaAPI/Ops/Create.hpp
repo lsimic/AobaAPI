@@ -36,7 +36,7 @@ class CreateGridResult {
     std::vector<Core::Face*> outerFaces;
 };
 
-const CreateGridResult CreateGrid(Core::Mesh* m, unsigned divisions, float size);
+const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY, float sizeX, float sizeY);
 
 class CreateIcoSphereResult {
   public:
