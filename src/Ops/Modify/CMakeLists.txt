@@ -4,5 +4,6 @@ target_sources(
 	${CMAKE_CURRENT_SOURCE_DIR}/Delete.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Duplicate.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ExtrudeEdges.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ExtrudeVerts.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MakeFace.cpp
 )
