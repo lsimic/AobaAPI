@@ -46,7 +46,20 @@ float Face::CalcPerimiter() const {
 }
 
 void Face::NormalFlip() { // TODO:
-    // low priority
+    FaceLoopList* currentLoopList = this->loops;
+
+    while(currentLoopList->next != this->loops) {
+
+        Loop* currentLoop = currentLoopList->first;
+        do {
+            currentLoop->v = currentLoop->e->Other(currentLoop->v);
+            Loop* toModify = currentLoop; 
+            currentLoop = currentLoop->fNext;
+            std::swap(toModify->fNext, toModify->fPrev);
+        } while(currentLoop != currentLoopList->first);
+
+        currentLoopList = currentLoopList->next;
+    }
 }
 
 void Face::NormalUpdate() { // TODO:

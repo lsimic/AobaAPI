@@ -65,7 +65,7 @@ float Edge::CalcLength() const {
     return (this->v1->co - this->v2->co).Magnitude();
 }
 
-const Vert* Edge::Other(const Vert* v) const {
+Vert* Edge::Other(const Vert* v) const {
     if(this->v1 == v) {
         return this->v2;
     } else if(this->v2 == v) {

@@ -82,7 +82,7 @@ class Edge {
     /// </summary>
     /// <param name="v">Any vert of this edge.</param>
     /// <returns>Other vert of this edge.</returns>
-    const Vert* Other(const Vert* v) const;
+    Vert* Other(const Vert* v) const;
 
     /// <summary>
     /// Check wether the edge is boundary face. Edge is boundary if it is used by only one face, and is used only once
