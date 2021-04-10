@@ -54,9 +54,9 @@ class CreateUvSphereResult {
     std::vector<Core::Face*> Faces;
 };
 
-const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, unsigned rings, unsigned segments);
+const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size_t rings, std::size_t segments);
 
-Core::Vert* CreateVert(Core::Mesh* m, Math::Vec3 co);
+Core::Vert* CreateVert(Core::Mesh* m, const Math::Vec3 co);
 
 } // namespace Ops
 } // namespace Aoba
