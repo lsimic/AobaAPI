@@ -36,15 +36,15 @@ void ExportObj(std::string path, Core::Mesh* mesh) {
     }
 
     for(std::size_t i = 0; i < edges.size(); ++i) {
-        outFile << "l ";
-        for(std::size_t j = 0; j < 2; ++j) {
-            outFile << edges.at(i)->Verts().at(j)->index << " ";
+        if(edges.at(i)->IsWire()) {
+            outFile << "l ";
+            for(std::size_t j = 0; j < 2; ++j) {
+                outFile << edges.at(i)->Verts().at(j)->index << " ";
+            }
+
+            outFile << "\n";
         }
-
-        outFile << "\n";
     }
-
-
 
     outFile.close();
 }
