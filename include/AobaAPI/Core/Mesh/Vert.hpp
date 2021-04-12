@@ -17,6 +17,7 @@ class Face;
 class Vert {
     friend class Mesh;
 
+    friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
     friend void KillEdge(Edge*);
     friend void KillMesh(Mesh*);
     friend void KillVert(Vert*);

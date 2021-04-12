@@ -1,6 +1,7 @@
 target_sources(
 	${PROJECT_NAME}
 	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/EdgeSplit.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillEdge.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillFace.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillMesh.cpp

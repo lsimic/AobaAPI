@@ -15,6 +15,7 @@ class Mesh;
 class FaceLoopList;
 
 class Loop {
+    friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
     friend void KillFace(Face*);
     friend void MakeFace(std::vector<Edge*>, Face*);
     friend void MakeFace(std::vector<Loop*>, Face*);
