@@ -36,26 +36,28 @@ const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY,
     boundaryEdges.reserve(2 * (divsX + 2 + divsY));
     std::vector<Core::Edge*> innerEdges = std::vector<Core::Edge*>();
     innerEdges.reserve(divsX * (1 + divsY) + divsY * (1 + divsX));
-    std::vector<Core::Edge*> edges = std::vector<Core::Edge*>();
-    edges.reserve((2 * (divsX + 2 + divsY)) + (divsX * (1 + divsY) + divsY * (1 + divsX)));
 
-    // create edges paralel to x axis
+    // create edges paralel to x axi
+    std::vector<Core::Edge*> xEdges = std::vector<Core::Edge*>();
+    xEdges.reserve((divsX + 1) * (divsY + 2));
     for(std::size_t y = 0; y <= divsY + 1; ++y) {
         for(std::size_t x = 0; x <= divsX; ++x) {
             std::size_t idx = y * (2 + divsX) + x;
             Core::Edge* newe = new Core::Edge();
             Core::MakeEdge(verts.at(idx), verts.at(idx + 1), newe);
-            edges.push_back(newe);
+            xEdges.push_back(newe);
         }
     }
 
     // create edges paralel to y axis
-    for(std::size_t x = 0; x <= divsX + 1; ++x) {
-        for(std::size_t y = 0; y <= divsY; ++y) {
-            std::size_t idx = x + (2 + divsX) * y;
+    std::vector<Core::Edge*> yEdges = std::vector<Core::Edge*>();
+    yEdges.reserve((divsY + 1) * (divsX + 2));
+    for(std::size_t y = 0; y <= divsY; ++y) {
+        for(std::size_t x = 0; x <= divsX + 1; ++x) {
+            std::size_t idx = y * (2 + divsX) + x;
             Core::Edge* newe = new Core::Edge();
             Core::MakeEdge(verts.at(idx), verts.at(idx + 2 + divsX), newe);
-            edges.push_back(newe);
+            yEdges.push_back(newe);
         }
     }
 
@@ -71,10 +73,10 @@ const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY,
     // Create edges and faces.
     for(std::size_t x = 0; x <= divsX; ++x) {
         for(std::size_t y = 0; y <= divsY; ++y) {
-            Core::Edge* e0 = edges.at(y * (1 + divsX) + x);
-            Core::Edge* e1 = edges.at((2 + divsY) * (1 + divsX) + x * (1 + divsY) + y);
-            Core::Edge* e2 = edges.at((1 + y) + (1 + divsX) + x);
-            Core::Edge* e3 = edges.at((2 + divsY) * (1 + divsX) + (1 + x) * (1 + divsY) + y);
+            Core::Edge* e0 = xEdges.at(x + y * (1 + divsX));
+            Core::Edge* e1 = yEdges.at(x + (2 + divsX) * y + 1);
+            Core::Edge* e2 = xEdges.at(x + (1 + y) * (1 + divsX));
+            Core::Edge* e3 = yEdges.at(x + (2 + divsX) * y);
 
             Core::Vert* v0 = verts.at(y * (2 + divsX) + x);
             Core::Vert* v1 = verts.at(y * (2 + divsX) + x + 1);
@@ -94,27 +96,37 @@ const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY,
             if(x == 0) {
                 boundaryEdges.push_back(e0);
                 isBoundaryFace = true;
+                if(divsX == 0) {
+                    boundaryEdges.push_back(e2);
+                } else {
+                    // innerEdges.push_back(e2);
+                }
+            } else if(x == divsX) {
+                isBoundaryFace = true;
+                innerEdges.push_back(e0);
+                boundaryEdges.push_back(e2);
             } else {
                 innerEdges.push_back(e0);
+                // innerEdges.push_back(e2);
             }
-            if(x == divsX + 1) {
-                boundaryEdges.push_back(e2);
-                isBoundaryFace = true;
-            } else {
-                innerEdges.push_back(e2);
-            }
+
             if(y == 0) {
                 boundaryEdges.push_back(e3);
                 isBoundaryFace = true;
+                if(divsY == 0) {
+                    boundaryEdges.push_back(e1);
+                } else {
+                    //  innerEdges.push_back(e1);
+                }
+            } else if(y == divsY) {
+                isBoundaryFace = true;
+                innerEdges.push_back(e3);
+                boundaryEdges.push_back(e1);
             } else {
                 innerEdges.push_back(e3);
+                //  innerEdges.push_back(e1);
             }
-            if(x == divsY + 1) {
-                boundaryEdges.push_back(e1);
-                isBoundaryFace = true;
-            } else {
-                innerEdges.push_back(e1);
-            }
+
             if(isBoundaryFace) {
                 boundaryFaces.push_back(newf);
             } else {

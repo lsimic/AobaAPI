@@ -46,8 +46,9 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
     std::size_t edgeCount = (2 * rings + 1) * segments;
     edges.reserve(edgeCount);
 
-    // create edges except the cap edges
     // create ring edges
+    std::vector<Core::Edge*> rEdges = std::vector<Core::Edge*>();
+    rEdges.reserve(rings * segments);
     for(std::size_t ring = 0; ring < rings; ++ring) {
         for(int i = 0; i < segments; ++i) {
             std::size_t idx = ring * segments + i;
@@ -58,16 +59,20 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
             } else {
                 Core::MakeEdge(verts.at(idx), verts.at(ring * segments), newe);
             }
+            rEdges.push_back(newe);
             edges.push_back(newe);
         }
     }
 
     // create segment edges
+    std::vector<Core::Edge*> sEdges = std::vector<Core::Edge*>();
+    sEdges.reserve((rings - 1) * segments);
     for(int ring = 0; ring < rings - 1; ++ring) {
         for(int segment = 0; segment < segments; ++segment) {
             std::size_t idx = ring * segments + segment;
             Core::Edge* newe = new Core::Edge();
             Core::MakeEdge(verts.at(idx), verts.at(idx + segments), newe);
+            sEdges.push_back(newe);
             edges.push_back(newe);
         }
     }
@@ -100,10 +105,10 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
         std::vector<Core::Edge*> loopEdges;
         if(i != segments - 1) {
             loopVerts = {verts.at(i), capBottom, verts.at(i + 1)};
-            loopEdges = {bottomEdges.at(i), bottomEdges.at(i + 1), edges.at(i)};
+            loopEdges = {bottomEdges.at(i), bottomEdges.at(i + 1), rEdges.at(i)};
         } else {
             loopVerts = {verts.at(i), capBottom, verts.at(0)};
-            loopEdges = {bottomEdges.at(i), bottomEdges.at(0), edges.at(i)};
+            loopEdges = {bottomEdges.at(i), bottomEdges.at(0), rEdges.at(i)};
         }
         Core::Loop* newl = new Core::Loop();
         Core::MakeLoop(loopEdges, loopVerts, newl);
@@ -119,10 +124,10 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
         std::vector<Core::Edge*> loopEdges;
         if(i != segments - 1) {
             loopVerts = {capTop, verts.at(idx), verts.at(idx + 1)};
-            loopEdges = {topEdges.at(i), edges.at(idx), topEdges.at(i + 1)};
+            loopEdges = {topEdges.at(i), rEdges.at(idx), topEdges.at(i + 1)};
         } else {
             loopVerts = {capTop, verts.at(idx), verts.at((rings - 1) * segments)};
-            loopEdges = {topEdges.at(i), edges.at(idx), topEdges.at(0)};
+            loopEdges = {topEdges.at(i), rEdges.at(idx), topEdges.at(0)};
         }
         Core::Loop* newl = new Core::Loop();
         Core::MakeLoop(loopEdges, loopVerts, newl);
@@ -140,19 +145,19 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
             Core::Vert* v2;
             Core::Vert* v3 = verts.at(idx + segments);
 
-            Core::Edge* e0 = edges.at(idx);
+            Core::Edge* e0 = rEdges.at(idx);
             Core::Edge* e1;
-            Core::Edge* e2 = edges.at(idx + segments);
-            Core::Edge* e3 = edges.at(rings * segments + segment);
+            Core::Edge* e2 = rEdges.at(idx + segments);
+            Core::Edge* e3 = sEdges.at(idx);
 
             if(segment == segments - 1) {
                 v1 = verts.at(ring * segments);
                 v2 = verts.at((ring + 1) * segments);
-                e1 = edges.at(rings * segments + ring);
+                e1 = sEdges.at(ring * segments);
             } else {
                 v1 = verts.at(idx + 1);
                 v2 = verts.at(idx + segments + 1);
-                e1 = edges.at(rings * segments + segment + 1);
+                e1 = sEdges.at(idx + 1);
             }
 
             std::vector<Core::Edge*> loopEdges = {e0, e1, e2, e3};
