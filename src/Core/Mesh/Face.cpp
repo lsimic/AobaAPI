@@ -49,11 +49,14 @@ void Face::NormalFlip() { // TODO:
     FaceLoopList* currentLoopList = this->loops;
 
     while(currentLoopList->next != this->loops) {
-
         Loop* currentLoop = currentLoopList->first;
         do {
-            currentLoop->v = currentLoop->e->Other(currentLoop->v);
-            Loop* toModify = currentLoop; 
+            if(currentLoop->v == currentLoop->e->v1) {
+                currentLoop->v = currentLoop->e->v2;
+            } else {
+                currentLoop->v = currentLoop->e->v1;
+            }
+            Loop* toModify = currentLoop;
             currentLoop = currentLoop->fNext;
             std::swap(toModify->fNext, toModify->fPrev);
         } while(currentLoop != currentLoopList->first);

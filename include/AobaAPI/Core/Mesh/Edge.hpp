@@ -17,6 +17,7 @@ class Face;
 class Edge {
     friend class Vert;
     friend class Mesh;
+    friend class Face;
 
     friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
     friend void KillEdge(Edge*);
@@ -83,7 +84,7 @@ class Edge {
     /// </summary>
     /// <param name="v">Any vert of this edge.</param>
     /// <returns>Other vert of this edge.</returns>
-    Vert* Other(const Vert* v) const;
+    const Vert* Other(const Vert* v) const;
 
     /// <summary>
     /// Check wether the edge is boundary face. Edge is boundary if it is used by only one face, and is used only once
@@ -123,6 +124,18 @@ class Edge {
     /// </summary>
     /// <returns>Unordered List containing references to all verts of this edge,
     const std::vector<Vert*> Verts() const;
+
+    /// <summary>
+    /// V1 of this edge. Do not use this to change the verts, use EulerOps instead.
+    /// </summary>
+    /// <returns></returns>
+    const Vert* V1() const;
+    
+    /// <summary>
+    /// V1 of this edge. Do not use this to change the verts, use EulerOps instead.
+    /// </summary>
+    /// <returns></returns>
+    const Vert* V2() const;
 };
 } // namespace Core
 } // namespace Aoba

@@ -6,7 +6,7 @@ namespace Core {
 
 void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv) {
     newe->m = e->m;
-    newv->m = v->m;
+    newv->m = e->m; // v can be nullptr
     // add the new edge between the appropriate verts
     // if v is not specified, add the new edge around v1.
 

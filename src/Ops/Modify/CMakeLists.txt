@@ -7,4 +7,5 @@ target_sources(
 	${CMAKE_CURRENT_SOURCE_DIR}/ExtrudeVerts.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MakeFace.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ReverseFaceOrder.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SplitEdges.cpp
 )
