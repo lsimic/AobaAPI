@@ -84,7 +84,7 @@ class Edge {
     /// </summary>
     /// <param name="v">Any vert of this edge.</param>
     /// <returns>Other vert of this edge.</returns>
-    const Vert* Other(const Vert* v) const;
+    Vert* Other(const Vert* v) const;
 
     /// <summary>
     /// Check wether the edge is boundary face. Edge is boundary if it is used by only one face, and is used only once
@@ -129,13 +129,13 @@ class Edge {
     /// V1 of this edge. Do not use this to change the verts, use EulerOps instead.
     /// </summary>
     /// <returns></returns>
-    const Vert* V1() const;
+    Vert* V1() const;
     
     /// <summary>
     /// V1 of this edge. Do not use this to change the verts, use EulerOps instead.
     /// </summary>
     /// <returns></returns>
-    const Vert* V2() const;
+    Vert* V2() const;
 };
 } // namespace Core
 } // namespace Aoba

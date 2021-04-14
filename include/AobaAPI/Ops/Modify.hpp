@@ -35,6 +35,7 @@ class ExtrudeEdgesResult {
 const ExtrudeEdgesResult ExtrudeEdges(Core::Mesh* m, const std::vector<Core::Edge*>& edges);
 
 class ExtrudeFacesResult {
+  public:
     std::vector<Core::Vert*> verts;
     std::vector<Core::Face*> horizontalFaces;
     std::vector<Core::Edge*> horizontalEdges;
@@ -42,7 +43,7 @@ class ExtrudeFacesResult {
     std::vector<Core::Edge*> verticalEdges;
 };
 
-const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Face*>& faces);
+const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Face*>& faces, bool keepOrig);
 
 class ExtrudeFaceRegionResult {
     // TODO: perhaps some things could be kept "in place" here
