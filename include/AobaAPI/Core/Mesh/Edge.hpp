@@ -120,6 +120,12 @@ class Edge {
     const std::vector<Face*> Faces() const;
 
     /// <summary>
+    /// List of all Loops that use this edge. Do not use this list to add new Loops, use EulerOps instead.
+    /// </summary>
+    /// <returns>Unordered List containing references to all Loops which use this edge.</returns>
+    const std::vector<Loop*> Loops() const;
+
+    /// <summary>
     /// List of all Verts of the edge. Do not use this list to change verts, use EulerOps instead.
     /// </summary>
     /// <returns>Unordered List containing references to all verts of this edge,

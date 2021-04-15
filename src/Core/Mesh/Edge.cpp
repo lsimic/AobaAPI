@@ -145,10 +145,26 @@ const std::vector<Face*> Edge::Faces() const {
 
     Loop* currentLoop = this->l;
     do {
-        if(std::find(result.begin(), result.end(), currentLoop->f) == result.end()) { // check if face already added
+        // check if the face already added
+        // handles edges which are used by the same face in multiple orientations
+        if(std::find(result.begin(), result.end(), currentLoop->f) == result.end()) { 
             // face not present, add to result
             result.push_back(currentLoop->f);
         }
+        currentLoop = currentLoop->eNext;
+    } while(currentLoop != this->l);
+    return result;
+}
+
+const std::vector<Loop*> Edge::Loops() const {
+    std::vector<Loop*> result = std::vector<Loop*>();
+    if(this->l == nullptr) {
+        return result;
+    }
+
+    Loop* currentLoop = this->l;
+    do {
+        result.push_back(currentLoop);
         currentLoop = currentLoop->eNext;
     } while(currentLoop != this->l);
     return result;

@@ -46,6 +46,11 @@ const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY,
             Core::Edge* newe = new Core::Edge();
             Core::MakeEdge(verts.at(idx), verts.at(idx + 1), newe);
             xEdges.push_back(newe);
+            if(y == 0 || y == divsY + 1) {
+                boundaryEdges.push_back(newe);
+            } else {
+                innerEdges.push_back(newe);
+            }
         }
     }
 
@@ -58,6 +63,11 @@ const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY,
             Core::Edge* newe = new Core::Edge();
             Core::MakeEdge(verts.at(idx), verts.at(idx + 2 + divsX), newe);
             yEdges.push_back(newe);
+            if(x == 0 || x == divsX + 1) {
+                boundaryEdges.push_back(newe);
+            } else {
+                innerEdges.push_back(newe);
+            }
         }
     }
 
@@ -93,38 +103,12 @@ const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY,
 
             // TODO: push faces, edges to appropriate vectors...
             bool isBoundaryFace = false;
-            if(x == 0) {
-                boundaryEdges.push_back(e0);
+            if(x == 0 || x == divsX) {
                 isBoundaryFace = true;
-                if(divsX == 0) {
-                    boundaryEdges.push_back(e2);
-                } else {
-                    // innerEdges.push_back(e2);
-                }
-            } else if(x == divsX) {
+            } else if(y == 0 || y == divsY) {
                 isBoundaryFace = true;
-                innerEdges.push_back(e0);
-                boundaryEdges.push_back(e2);
             } else {
-                innerEdges.push_back(e0);
-                // innerEdges.push_back(e2);
-            }
-
-            if(y == 0) {
-                boundaryEdges.push_back(e3);
-                isBoundaryFace = true;
-                if(divsY == 0) {
-                    boundaryEdges.push_back(e1);
-                } else {
-                    //  innerEdges.push_back(e1);
-                }
-            } else if(y == divsY) {
-                isBoundaryFace = true;
-                innerEdges.push_back(e3);
-                boundaryEdges.push_back(e1);
-            } else {
-                innerEdges.push_back(e3);
-                //  innerEdges.push_back(e1);
+                isBoundaryFace = false;
             }
 
             if(isBoundaryFace) {
