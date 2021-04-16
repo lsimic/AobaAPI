@@ -2,6 +2,7 @@ target_sources(
 	${PROJECT_NAME}
 	PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/CreateCircle.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/CreateCube.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CreateGrid.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CreateUVSphere.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CreateVert.cpp
