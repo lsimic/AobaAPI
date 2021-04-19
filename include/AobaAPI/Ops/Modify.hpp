@@ -105,26 +105,6 @@ const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, 
 
 void RecalculateFaceNormals(Core::Mesh* m, const std::vector<Core::Face*>& faces);
 
-class RegionExtendResult {
-  public:
-    std::vector<Core::Vert*> verts;
-    std::vector<Core::Face*> faces;
-    std::vector<Core::Edge*> edges;
-};
-
-const RegionExtendResult RegionExtend(Core::Mesh* m, const std::vector<Core::Vert*>& verts,
-    const std::vector<Core::Edge*>& edges, const std::vector<Core::Face*>& faces, bool faceStep);
-
-class RegionReduceResult {
-  public:
-    std::vector<Core::Vert*> verts;
-    std::vector<Core::Face*> faces;
-    std::vector<Core::Edge*> edges;
-};
-
-const RegionReduceResult RegionReduce(Core::Mesh* m, const std::vector<Core::Vert*>& verts,
-    const std::vector<Core::Edge*>& edges, const std::vector<Core::Face*>& faces, bool faceStep, bool reduceToZero);
-
 void ReverseFaceOrder(Core::Mesh* m, const std::vector<Core::Face*>& faces);
 
 class SplitEdgesResult {

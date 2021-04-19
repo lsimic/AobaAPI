@@ -1,0 +1,9 @@
+target_sources(
+	${PROJECT_NAME}
+	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/SelectExtend.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SelectReduce.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SelectFromEdges.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SelectFromFaces.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SelectFromVerts.cpp
+)

@@ -3,6 +3,7 @@
 
 #include "Ops/Create.hpp"
 #include "Ops/Modify.hpp"
+#include "Ops/Select.hpp"
 #include "Ops/Transform.hpp"
 
 #endif
