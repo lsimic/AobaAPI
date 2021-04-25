@@ -21,88 +21,83 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
 
     // duplicate each face(and its edges, vertices, etc)
     for(Core::Face* face : faces) {
-        std::vector<Core::Loop*> faceLoops = std::vector<Core::Loop*>();
-        // iterate over all loops of a face using looplists
-        for(Core::FaceLoopList* loopList : face->LoopLists()) {
-            std::vector<Core::Edge*> loopEdges = std::vector<Core::Edge*>();
-            std::vector<Core::Vert*> loopVerts = std::vector<Core::Vert*>();
+        // iterate over all loops of a face
+        std::vector<Core::Edge*> loopEdges = std::vector<Core::Edge*>();
+        std::vector<Core::Vert*> loopVerts = std::vector<Core::Vert*>();
 
-            // iterate over all loops inside this loop
-            for(Core::Loop* loop : loopList->Loops()) {
-                Core::Edge* loopEdge = loop->LoopEdge();
+        // iterate over all loops inside this face
+        for(Core::Loop* loop : face->Loops()) {
+            Core::Edge* loopEdge = loop->LoopEdge();
 
-                // check if edge had already been duplicated
-                if(loopEdge->flagsIntern & DUPLICATED_EDGE) {
-                    // multiple faces use this edge, therefore it is inside, not on the boundary
-                    if(!(loopEdge->flagsIntern & INSIDE_EDGE)) {
-                        loopEdge->flagsIntern += INSIDE_EDGE;
-                    }
-                    // use the stored index to add the edge, vertex to loop
-                    loopEdges.push_back(horizontalEdges.at(loopEdge->index));
-                    loopVerts.push_back(newVerts.at(loop->LoopVert()->index));
+            // check if edge had already been duplicated
+            if(loopEdge->flagsIntern & DUPLICATED_EDGE) {
+                // multiple faces use this edge, therefore it is inside, not on the boundary
+                if(!(loopEdge->flagsIntern & INSIDE_EDGE)) {
+                    loopEdge->flagsIntern += INSIDE_EDGE;
+                }
+                // use the stored index to add the edge, vertex to loop
+                loopEdges.push_back(horizontalEdges.at(loopEdge->index));
+                loopVerts.push_back(newVerts.at(loop->LoopVert()->index));
+            } else {
+                // add to list of orignal edges
+                originalEdges.push_back(loopEdge);
+                // edge was not duplicated, but some verts might have been.
+                Core::Vert* v1;
+                Core::Vert* v2;
+                Core::Edge* newe = new Core::Edge();
+
+                if(loopEdge->V1()->flagsIntern & DUPLICATED_VERT) {
+                    // v1 was duplicated
+                    v1 = newVerts.at(loopEdge->V1()->index);
                 } else {
-                    // add to list of orignal edges
-                    originalEdges.push_back(loopEdge);
-                    // edge was not duplicated, but some verts might have been.
-                    Core::Vert* v1;
-                    Core::Vert* v2;
-                    Core::Edge* newe = new Core::Edge();
+                    // v1 was not duplicated, do it now
+                    v1 = new Core::Vert();
+                    loopEdge->V1()->index = vertIdx;
+                    loopEdge->V1()->flagsIntern = DUPLICATED_VERT;
+                    ++vertIdx;
+                    v1->co = loopEdge->V1()->co;
+                    Core::MakeVert(m, v1);
+                    newVerts.push_back(v1);
+                    originalVerts.push_back(loopEdge->V1());
+                }
 
-                    if(loopEdge->V1()->flagsIntern & DUPLICATED_VERT) {
-                        // v1 was duplicated
-                        v1 = newVerts.at(loopEdge->V1()->index);
-                    } else {
-                        // v1 was not duplicated, do it now
-                        v1 = new Core::Vert();
-                        loopEdge->V1()->index = vertIdx;
-                        loopEdge->V1()->flagsIntern = DUPLICATED_VERT;
-                        ++vertIdx;
-                        v1->co = loopEdge->V1()->co;
-                        Core::MakeVert(m, v1);
-                        newVerts.push_back(v1);
-                        originalVerts.push_back(loopEdge->V1());
-                    }
-
-                    if(loopEdge->V2()->flagsIntern & DUPLICATED_VERT) {
-                        // v1 was duplicated
-                        v2 = newVerts.at(loopEdge->V2()->index);
-                    } else {
-                        // v1 was not duplicated, do it now
-                        v2 = new Core::Vert();
-                        loopEdge->V2()->index = vertIdx;
-                        loopEdge->V2()->flagsIntern = DUPLICATED_VERT;
-                        ++vertIdx;
-                        v2->co = loopEdge->V2()->co;
-                        Core::MakeVert(m, v2);
-                        newVerts.push_back(v2);
-                        originalVerts.push_back(loopEdge->V2());
-                    }
-                    // make the edge
-                    Core::MakeEdge(v1, v2, newe);
-                    horizontalEdges.push_back(newe);
-                    loopEdge->index = edgeIdx;
-                    loopEdge->flagsIntern += DUPLICATED_EDGE;
-                    ++edgeIdx;
-                    // push edge, vert to loop
-                    loopEdges.push_back(newe);
-                    if(loopEdge->V1() == loop->LoopVert()) {
-                        loopVerts.push_back(v1);
-                    } else {
-                        loopVerts.push_back(v2);
-                    }
+                if(loopEdge->V2()->flagsIntern & DUPLICATED_VERT) {
+                    // v1 was duplicated
+                    v2 = newVerts.at(loopEdge->V2()->index);
+                } else {
+                    // v1 was not duplicated, do it now
+                    v2 = new Core::Vert();
+                    loopEdge->V2()->index = vertIdx;
+                    loopEdge->V2()->flagsIntern = DUPLICATED_VERT;
+                    ++vertIdx;
+                    v2->co = loopEdge->V2()->co;
+                    Core::MakeVert(m, v2);
+                    newVerts.push_back(v2);
+                    originalVerts.push_back(loopEdge->V2());
+                }
+                // make the edge
+                Core::MakeEdge(v1, v2, newe);
+                horizontalEdges.push_back(newe);
+                loopEdge->index = edgeIdx;
+                loopEdge->flagsIntern += DUPLICATED_EDGE;
+                ++edgeIdx;
+                // push edge, vert to loop
+                loopEdges.push_back(newe);
+                if(loopEdge->V1() == loop->LoopVert()) {
+                    loopVerts.push_back(v1);
+                } else {
+                    loopVerts.push_back(v2);
                 }
             }
-
-            // create a new loop with MakeLoop using the loopverts and loopeedges to create the top face
-            Core::Loop* faceLoop = new Core::Loop();
-            Core::MakeLoop(loopEdges, loopVerts, faceLoop);
-            // push the new loop to the list of new loops
-            faceLoops.push_back(faceLoop);
         }
 
-        // create the face using the list of new loops
+        // create a new loop with MakeLoop using the loopverts and loopeedges to create the top face
+        Core::Loop* faceLoop = new Core::Loop();
+        Core::MakeLoop(loopEdges, loopVerts, faceLoop);
+
+        // create the face using the new loop
         Core::Face* newf = new Core::Face();
-        Core::MakeFace(faceLoops, newf);
+        Core::MakeFace(faceLoop, newf);
         horizontalFaces.push_back(newf);
     }
 
@@ -164,7 +159,7 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
             Core::Loop* newl = new Core::Loop();
             Core::Face* newf = new Core::Face();
             Core::MakeLoop(loopEdges, loopVerts, newl);
-            Core::MakeFace(std::vector<Core::Loop*> {newl}, newf);
+            Core::MakeFace(newl, newf);
             verticalFaces.push_back(newf);
         }
     }

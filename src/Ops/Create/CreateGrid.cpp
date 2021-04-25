@@ -99,7 +99,7 @@ const CreateGridResult CreateGrid(Core::Mesh* m, int divisionsX, int divisionsY,
             Core::Loop* newl = new Core::Loop();
             Core::MakeLoop(loopEdges, loopVerts, newl);
             Core::Face* newf = new Core::Face();
-            Core::MakeFace(std::vector<Core::Loop*> {newl}, newf);
+            Core::MakeFace(newl, newf);
 
             // TODO: push faces, edges to appropriate vectors...
             bool isBoundaryFace = false;

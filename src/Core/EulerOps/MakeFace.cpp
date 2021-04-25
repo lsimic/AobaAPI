@@ -7,6 +7,10 @@ namespace Aoba {
 namespace Core {
 
 void MakeFace(std::vector<Edge*> edges, Face* newf) {
+    if(edges.size() < 3) {
+        throw std::invalid_argument("Face must have at least 3 distinct edges.");
+    }
+
     Mesh* m = edges.at(0)->m;
 
     // arrays to hold ordered edges and verts.
@@ -17,7 +21,7 @@ void MakeFace(std::vector<Edge*> edges, Face* newf) {
     loopVerts.push_back(edges.at(0)->v1);
     loopVerts.push_back(edges.at(0)->v2);
 
-    edges.erase(edges.begin()); // remove first edge from input edges?
+    edges.erase(edges.begin()); // remove first edge from input edges
 
     // find edge which contains last vert in the loop
     // push that edge into the loop
@@ -99,13 +103,8 @@ void MakeFace(std::vector<Edge*> edges, Face* newf) {
     loops.back()->fNext = loops.at(0);
     loops.back()->fPrev = loops.at(loops.size() - 2);
 
-    // loops now complete, finalize the face by creating faceLoopList and all that
-    FaceLoopList* flList = new FaceLoopList();
-    flList->first = loops.at(0);
-    flList->next = flList;
-    flList->prev = flList;
-
-    newf->loops = flList;
+    // loops now complete
+    newf->l = loops.at(0);
     newf->m = loops.at(0)->m;
 
     // add newf to mesh
@@ -122,35 +121,17 @@ void MakeFace(std::vector<Edge*> edges, Face* newf) {
     }
 }
 
-void MakeFace(std::vector<Loop*> loops, Face* newf) {
-    Mesh* m = loops.at(0)->m;
-    std::vector<FaceLoopList*> fllists = std::vector<FaceLoopList*>();
-    fllists.reserve(loops.size());
+void MakeFace(Loop* loop, Face* newf) {
+    Mesh* m = loop->m;
 
-    // Create facelooplists for each input loop, point the face to the first item in list
-    for(std::size_t i = 0; i < loops.size(); ++i) {
-        FaceLoopList* newfll = new FaceLoopList();
-        newfll->first = loops.at(i);
-        fllists.push_back(newfll);
-    }
-    for(std::size_t i = 1; i < fllists.size(); i++) {
-        fllists.at(i)->prev = fllists.at(i - 1);
-        fllists.at(i - 1)->next = fllists.at(i);
-    }
-    fllists.at(0)->prev = fllists.back();
-    fllists.back()->next = fllists.at(0);
+    // set the first loop of the face
+    newf->l = loop;
+    Loop* current = loop;
 
-    // set the first looplist of the face
-    newf->loops = fllists.at(0);
-    // make all loops point to the face.
-    for(std::size_t i = 0; i < fllists.size(); i++) {
-        Loop* current = fllists.at(i)->first;
-
-        do {
-            current->f = newf;
-            current = current->fNext;
-        } while(current != fllists.at(i)->first);
-    }
+    do {
+        current->f = newf;
+        current = current->fNext;
+    } while(current != loop);
 
     // add newf to mesh
     if(m->faces == nullptr) {
@@ -166,7 +147,7 @@ void MakeFace(std::vector<Loop*> loops, Face* newf) {
     }
 
     // link face to mesh
-    newf->m = loops.at(0)->m;
+    newf->m = m;
 }
 
 } // namespace Core

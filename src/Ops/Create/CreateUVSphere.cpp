@@ -113,7 +113,7 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
         Core::Loop* newl = new Core::Loop();
         Core::MakeLoop(loopEdges, loopVerts, newl);
         Core::Face* newf = new Core::Face();
-        Core::MakeFace(std::vector<Core::Loop*> {newl}, newf);
+        Core::MakeFace(newl, newf);
         faces.push_back(newf);
     }
 
@@ -132,7 +132,7 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
         Core::Loop* newl = new Core::Loop();
         Core::MakeLoop(loopEdges, loopVerts, newl);
         Core::Face* newf = new Core::Face();
-        Core::MakeFace(std::vector<Core::Loop*> {newl}, newf);
+        Core::MakeFace(newl, newf);
         faces.push_back(newf);
     }
 
@@ -166,7 +166,7 @@ const CreateUvSphereResult CreateUVSphere(Core::Mesh* m, float radius, std::size
             Core::Loop* newl = new Core::Loop();
             Core::MakeLoop(loopEdges, loopVerts, newl);
             Core::Face* newf = new Core::Face();
-            Core::MakeFace(std::vector<Core::Loop*> {newl}, newf);
+            Core::MakeFace(newl, newf);
 
             faces.push_back(newf);
         }

@@ -44,19 +44,17 @@ void Delete(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const std::vec
     for(Core::Face* f : facesToDelete) {
         // if using DeleteMode other than FaceOnly, mark edges(and verts) of this face for deletion
         if(mode != DeleteMode::FacesOnly) {
-            for(Core::FaceLoopList* loopList : f->LoopLists()) {
-                for(Core::Loop* loop : loopList->Loops()) {
-                    Core::Edge* edge = loop->LoopEdge();
-                    if(edge->flagsIntern != DELETE) {
-                        edge->flagsIntern = DELETE;
-                        edgesToDelete.push_back(edge);
-                    }
-                    if(mode == DeleteMode::All) {
-                        Core::Vert* vert = loop->LoopVert();
-                        if(vert->flagsIntern != DELETE) {
-                            vert->flagsIntern = DELETE;
-                            vertsToDelete.push_back(vert);
-                        }
+            for(Core::Loop* loop : f->Loops()) {
+                Core::Edge* edge = loop->LoopEdge();
+                if(edge->flagsIntern != DELETE) {
+                    edge->flagsIntern = DELETE;
+                    edgesToDelete.push_back(edge);
+                }
+                if(mode == DeleteMode::All) {
+                    Core::Vert* vert = loop->LoopVert();
+                    if(vert->flagsIntern != DELETE) {
+                        vert->flagsIntern = DELETE;
+                        vertsToDelete.push_back(vert);
                     }
                 }
             }

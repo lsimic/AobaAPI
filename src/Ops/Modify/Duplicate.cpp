@@ -81,82 +81,77 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
 
         std::vector<Core::Loop*> newFaceLoops = std::vector<Core::Loop*>();
 
-        std::vector<Core::FaceLoopList*> faceLoopLists = faces.at(i)->LoopLists();
+        std::vector<Core::Loop*> loops = faces.at(i)->Loops();
+        std::vector<Core::Vert*> loopVerts = std::vector<Core::Vert*>();
+        std::vector<Core::Edge*> loopEdges = std::vector<Core::Edge*>();
 
-        for(int j = 0; j < faceLoopLists.size(); ++j) {
-            std::vector<Core::Loop*> loops = faceLoopLists.at(j)->Loops();
-            std::vector<Core::Vert*> loopVerts = std::vector<Core::Vert*>();
-            std::vector<Core::Edge*> loopEdges = std::vector<Core::Edge*>();
+        for(int k = 0; k < loops.size(); ++k) {
+            // check if loop vert is copied, push to loopverts
+            if(loops.at(k)->LoopVert()->flagsIntern & COPIED) {
+                loopVerts.push_back(newVerts.at(loops.at(k)->LoopVert()->index));
+            } else {
+                Core::Vert* newv = new Core::Vert();
+                Core::MakeVert(m, newv);
 
-            for(int k = 0; k < loops.size(); ++k) {
-                // check if loop vert is copied, push to loopverts
-                if(loops.at(k)->LoopVert()->flagsIntern & COPIED) {
-                    loopVerts.push_back(newVerts.at(loops.at(k)->LoopVert()->index));
-                } else {
-                    Core::Vert* newv = new Core::Vert();
-                    Core::MakeVert(m, newv);
-
-                    newv->co = loops.at(k)->LoopVert()->co;
-                    loops.at(k)->LoopVert()->flagsIntern = COPIED;
-                    loops.at(k)->LoopVert()->index = vertIdx;
-                    vertIdx++;
-                    newVerts.push_back(newv);
-                    loopVerts.push_back(newv);
-                }
-
-                // check if loop edge is copied, push to loopedges
-                if(loops.at(k)->LoopEdge()->flagsIntern & COPIED) {
-                    loopEdges.push_back(newEdges.at(loops.at(k)->LoopEdge()->index));
-                } else {
-                    Core::Edge* newe = new Core::Edge();
-                    Core::Edge* current = loops.at(k)->LoopEdge();
-                    current->index = edgeIdx;
-                    current->flagsIntern = COPIED;
-                    edgeIdx++;
-
-                    Core::Vert* v1;
-                    Core::Vert* v2;
-
-                    if(current->Verts().at(0)->flagsIntern & COPIED) {
-                        v1 = newVerts.at(current->Verts().at(0)->index);
-                    } else {
-                        v1 = new Core::Vert();
-                        Core::MakeVert(m, v1);
-
-                        v1->co = current->Verts().at(0)->co;
-                        current->Verts().at(0)->flagsIntern = COPIED;
-
-                        current->Verts().at(0)->index = vertIdx;
-                        vertIdx++;
-                        newVerts.push_back(v1);
-                    }
-
-                    if(current->Verts().at(1)->flagsIntern & COPIED) {
-                        v2 = newVerts.at(current->Verts().at(1)->index);
-                    } else {
-                        v2 = new Core::Vert();
-                        Core::MakeVert(m, v2);
-
-                        v2->co = current->Verts().at(1)->co;
-                        current->Verts().at(1)->flagsIntern = COPIED;
-
-                        current->Verts().at(1)->index = vertIdx;
-                        vertIdx++;
-                        newVerts.push_back(v2);
-                    }
-
-                    Core::MakeEdge(v1, v2, newe);
-                    newEdges.push_back(newe);
-                    loopEdges.push_back(newe);
-                }
+                newv->co = loops.at(k)->LoopVert()->co;
+                loops.at(k)->LoopVert()->flagsIntern = COPIED;
+                loops.at(k)->LoopVert()->index = vertIdx;
+                vertIdx++;
+                newVerts.push_back(newv);
+                loopVerts.push_back(newv);
             }
 
-            Core::Loop* newl = new Core::Loop();
-            Core::MakeLoop(loopEdges, loopVerts, newl);
-            newFaceLoops.push_back(newl);
+            // check if loop edge is copied, push to loopedges
+            if(loops.at(k)->LoopEdge()->flagsIntern & COPIED) {
+                loopEdges.push_back(newEdges.at(loops.at(k)->LoopEdge()->index));
+            } else {
+                Core::Edge* newe = new Core::Edge();
+                Core::Edge* current = loops.at(k)->LoopEdge();
+                current->index = edgeIdx;
+                current->flagsIntern = COPIED;
+                edgeIdx++;
+
+                Core::Vert* v1;
+                Core::Vert* v2;
+
+                if(current->Verts().at(0)->flagsIntern & COPIED) {
+                    v1 = newVerts.at(current->Verts().at(0)->index);
+                } else {
+                    v1 = new Core::Vert();
+                    Core::MakeVert(m, v1);
+
+                    v1->co = current->Verts().at(0)->co;
+                    current->Verts().at(0)->flagsIntern = COPIED;
+
+                    current->Verts().at(0)->index = vertIdx;
+                    vertIdx++;
+                    newVerts.push_back(v1);
+                }
+
+                if(current->Verts().at(1)->flagsIntern & COPIED) {
+                    v2 = newVerts.at(current->Verts().at(1)->index);
+                } else {
+                    v2 = new Core::Vert();
+                    Core::MakeVert(m, v2);
+
+                    v2->co = current->Verts().at(1)->co;
+                    current->Verts().at(1)->flagsIntern = COPIED;
+
+                    current->Verts().at(1)->index = vertIdx;
+                    vertIdx++;
+                    newVerts.push_back(v2);
+                }
+
+                Core::MakeEdge(v1, v2, newe);
+                newEdges.push_back(newe);
+                loopEdges.push_back(newe);
+            }
         }
 
-        Core::MakeFace(newFaceLoops, newf);
+        Core::Loop* newl = new Core::Loop();
+        Core::MakeLoop(loopEdges, loopVerts, newl);
+
+        Core::MakeFace(newl, newf);
         newFaces.push_back(newf);
     }
 
@@ -184,25 +179,21 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
     }
 
     for(int i = 0; i < faces.size(); ++i) {
-        std::vector<Core::FaceLoopList*> faceLoopLists = faces.at(i)->LoopLists();
+        std::vector<Core::Loop*> loops = faces.at(i)->Loops();
 
-        for(int j = 0; j < faceLoopLists.size(); ++j) {
-            std::vector<Core::Loop*> loops = faceLoopLists.at(j)->Loops();
+        for(int k = 0; k < loops.size(); ++k) {
+            loops.at(k)->LoopVert()->flagsIntern = 0;
+            loops.at(k)->LoopVert()->index = 0;
 
-            for(int k = 0; k < loops.size(); ++k) {
-                loops.at(k)->LoopVert()->flagsIntern = 0;
-                loops.at(k)->LoopVert()->index = 0;
-
-                if(loops.at(k)->LoopEdge()->flagsIntern) {
-                    loops.at(k)->LoopEdge()->Verts().at(0)->index = 0;
-                    loops.at(k)->LoopEdge()->Verts().at(0)->flagsIntern = 0;
-                    loops.at(k)->LoopEdge()->Verts().at(1)->index = 0;
-                    loops.at(k)->LoopEdge()->Verts().at(1)->flagsIntern = 0;
-                }
-
-                loops.at(k)->LoopEdge()->flagsIntern = 0;
-                loops.at(k)->LoopEdge()->index = 0;
+            if(loops.at(k)->LoopEdge()->flagsIntern) {
+                loops.at(k)->LoopEdge()->Verts().at(0)->index = 0;
+                loops.at(k)->LoopEdge()->Verts().at(0)->flagsIntern = 0;
+                loops.at(k)->LoopEdge()->Verts().at(1)->index = 0;
+                loops.at(k)->LoopEdge()->Verts().at(1)->flagsIntern = 0;
             }
+
+            loops.at(k)->LoopEdge()->flagsIntern = 0;
+            loops.at(k)->LoopEdge()->index = 0;
         }
     }
 

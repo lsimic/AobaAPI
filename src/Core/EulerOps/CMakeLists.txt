@@ -2,6 +2,7 @@ target_sources(
 	${PROJECT_NAME}
 	PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/EdgeSplit.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/GlueVert.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillEdge.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillFace.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillMesh.cpp
@@ -11,4 +12,5 @@ target_sources(
 	${CMAKE_CURRENT_SOURCE_DIR}/MakeFace.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MakeLoop.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MakeVert.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ManifoldMakeEdge.cpp
 )

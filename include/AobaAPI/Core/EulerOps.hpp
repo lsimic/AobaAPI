@@ -16,7 +16,7 @@ class Loop;
 /// Deletes the Edge e and joins the faces which touch upon Edge e into a single face. If the operation would result
 /// in the creation of a non manifold face (which occours when edge is used three or more times) an error will result
 /// and no operation will be performed. The optional parameter f specifies which face will be the surviving face. In
-/// any case, the fSurvivor return parameter will be populated. 
+/// any case, the fSurvivor return parameter will be populated.
 /// </summary>
 /// <param name="e"></param>
 /// <param name="f"></param>
@@ -24,7 +24,7 @@ class Loop;
 void DissolveEdge(Edge* e, Face* f, Face* fSurvivor);
 
 // TODO: should also make a DissolveVert operator, but i'm not sure about the behaviour
-// what happens if Vert is used by three or more wire edges? 
+// what happens if Vert is used by three or more wire edges?
 // what happens if vert is boundary?
 
 /// <summary>
@@ -39,13 +39,11 @@ void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv);
 
 /// <summary>
 /// Squeezes the ends of the specified edge e together, deleting the edge and a vertex while preserving adjecencies.
-/// the optional parameter v, if specified, designates which vertex of the edge e will survive. in any case, the
-/// surviving vertex is indicated by the vsurvivor return parameter. 
+/// the parameter vSurvivor designates which vertex of the edge e will survive.
 /// </summary>
 /// <param name="e"></param>
-/// <param name="v"></param>
 /// <param name="vSurvivor"></param>
-void EdgeSqueeze(Edge* e, Vert* v, Vert* vSurvivor);
+void EdgeSqueeze(Edge* e, Vert* vSurvivor);
 
 /// <summary>
 /// Merges the Edge e1 together with the Edge e2 preserving the adhecencies of elements. The Edge e1 is the
@@ -63,7 +61,7 @@ void GlueEdge(Edge* e1, Edge* e2);
 /// number of edges with self loop, isthmus and strut edges in an identical order in both loops or an error will result
 ///  and no action will be performed. Note that if the faces f1 and f2 share any edges or two or more vertices the
 /// acceptable orientations for glue operations may already be fixed. If they are improperly specified an error will
-/// result and no action will be pefrormed. 
+/// result and no action will be pefrormed.
 /// </summary>
 /// <param name="fu1"></param>
 /// <param name="eu1"></param>
@@ -80,7 +78,7 @@ void GlueFace(Face* f1, Edge* e1, Face* f2, Edge* e2);
 void GlueVert(Vert* v1, Vert* v2);
 
 /// <summary>
-/// Deletes the Edge e and any faces which touch upon it, deleting loops as necessary. 
+/// Deletes the Edge e and any faces which touch upon it, deleting loops as necessary.
 /// This is NOT equivalent to calling ~Edge()!
 /// </summary>
 /// <param name="e"></param>
@@ -124,14 +122,14 @@ void MakeEdge(Vert* v1, Vert* v2, Edge* newe);
 void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv);
 
 /// <summary>
-/// Creates a new face using the specified loops, where each element in loops parameter is a pointer to the first 
-/// item in the closed circuit of loops. This methods allows for creation of faces with holes/multiple loops. 
+/// Creates a new face using the specified loops, where each element in loops parameter is a pointer to the first
+/// item in the closed circuit of loops. This methods allows for creation of faces with holes/multiple loops.
 /// Use the MakeLoop EulerOp to create all necessary loops. Loops must be traversable using fNext/fPrev.
 /// Loops must be already added to their edges lists (MakeLoop euler operator does this).
 /// </summary>
 /// <param name="loops"></param>
 /// <param name="newf"></param>
-void MakeFace(std::vector<Loop*> loops, Face* newf);
+void MakeFace(Loop* loop, Face* newf);
 
 /// <summary>
 /// Creates a new face newf with its single loop newl bounded by the single circuit of edges as specified in edges. The

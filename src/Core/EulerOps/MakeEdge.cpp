@@ -1,11 +1,22 @@
 #include "AobaAPI/Core/EulerOps.hpp"
 #include "AobaAPI/Core/Mesh.hpp"
+#include <stdexcept>
 
 namespace Aoba {
 namespace Core {
 
 void MakeEdge(Vert* v1, Vert* v2, Edge* newe) {
     // v1 and v2 are already in the mesh
+
+    if(v1 == v2) {
+        throw std::invalid_argument("Self-loop edges are not allowed");
+    }
+
+    for(Core::Edge* edge : v1->Edges()) {
+        if(edge->Other(v1) == v2) {
+            throw std::invalid_argument("Edge already exists between v1 and v2");
+        }
+    }
 
     // add newe to the mesh.
     // mesh might not have any edges at this point.

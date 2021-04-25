@@ -22,8 +22,10 @@ class Mesh {
     friend void MakeEdge(Vert*, Vert*, Edge*);
     friend void MakeEdgeVert(Vert*, Edge*, Vert*);
     friend void MakeFace(std::vector<Edge*>, Face*);
-    friend void MakeFace(std::vector<Loop*>, Face*);
+    friend void MakeFace(Loop*, Face*);
     friend void MakeVert(Mesh*, Vert*);
+    friend void GlueVert(Vert*, Vert*);
+    friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
 
   private:
     Vert* verts; // List of all verts in the mesh.

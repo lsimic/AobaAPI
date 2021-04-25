@@ -69,37 +69,37 @@ const CreateCubeResult CreateCube(Core::Mesh* m, float size) {
     std::vector<Core::Edge*> loopEdges = {edges.at(0), edges.at(1), edges.at(2), edges.at(3)};
     std::vector<Core::Vert*> loopVerts = {verts.at(0), verts.at(1), verts.at(2), verts.at(3)};
     Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(std::vector<Core::Loop*> {newl}, faces.at(0));
+    Core::MakeFace(newl, faces.at(0));
 
     newl = new Core::Loop();
     loopEdges = {edges.at(4), edges.at(7), edges.at(6), edges.at(5)};
     loopVerts = {verts.at(5), verts.at(4), verts.at(7), verts.at(6)};
     Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(std::vector<Core::Loop*> {newl}, faces.at(1));
+    Core::MakeFace(newl, faces.at(1));
 
     newl = new Core::Loop();
     loopEdges = {edges.at(9), edges.at(5), edges.at(10), edges.at(1)};
     loopVerts = {verts.at(1), verts.at(5), verts.at(6), verts.at(2)};
     Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(std::vector<Core::Loop*> {newl}, faces.at(2));
+    Core::MakeFace(newl, faces.at(2));
 
     newl = new Core::Loop();
     loopEdges = {edges.at(8), edges.at(3), edges.at(11), edges.at(7)};
     loopVerts = {verts.at(4), verts.at(0), verts.at(3), verts.at(7)};
     Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(std::vector<Core::Loop*> {newl}, faces.at(3));
+    Core::MakeFace(newl, faces.at(3));
 
     newl = new Core::Loop();
     loopEdges = {edges.at(10), edges.at(6), edges.at(11), edges.at(2)};
     loopVerts = {verts.at(2), verts.at(6), verts.at(7), verts.at(3)};
     Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(std::vector<Core::Loop*> {newl}, faces.at(4));
+    Core::MakeFace(newl, faces.at(4));
 
     newl = new Core::Loop();
     loopEdges = {edges.at(8), edges.at(4), edges.at(9), edges.at(0)};
     loopVerts = {verts.at(0), verts.at(4), verts.at(5), verts.at(1)};
     Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(std::vector<Core::Loop*> {newl}, faces.at(5));
+    Core::MakeFace(newl, faces.at(5));
 
     CreateCubeResult result = CreateCubeResult();
     result.edges = edges;

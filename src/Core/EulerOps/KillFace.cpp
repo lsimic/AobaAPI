@@ -5,35 +5,28 @@ namespace Aoba {
 namespace Core {
 
 void KillFace(Face* f) {
-    FaceLoopList* current = f->loops;
-    // iterate over all Face loop lists
+    // iterate over all face loops
+    Loop* currentLoop = f->l;
     do {
-        // iterate over all loops in looplist
-        Loop* currentLoop = current->first;
-        do {
-            // remove loop from list of loops around an edge.
-            if(currentLoop->eNext == currentLoop && currentLoop->ePrev == currentLoop) {
-                // this is the only face using this edge.
-                currentLoop->e->l = nullptr;
-            } else {
-                // the edge of this loop has more than one loop.
-                currentLoop->ePrev->eNext = currentLoop->eNext;
-                currentLoop->eNext->ePrev = currentLoop->ePrev;
-            }
+        // remove loop from list of loops around an edge.
+        if(currentLoop->eNext == currentLoop && currentLoop->ePrev == currentLoop) {
+            // this is the only face using this edge.
+            currentLoop->e->l = nullptr;
+        } else {
+            // the edge of this loop has more than one loop.
+            currentLoop->ePrev->eNext = currentLoop->eNext;
+            currentLoop->eNext->ePrev = currentLoop->ePrev;
             if(currentLoop->e->l == currentLoop) {
                 currentLoop->e->l = currentLoop->eNext;
             }
+        }
 
-            Loop* toDelete = currentLoop;
-            currentLoop = currentLoop->fNext;
-            delete toDelete;
-        } while(currentLoop != current->first);
+        Loop* toDelete = currentLoop;
+        currentLoop = currentLoop->fNext;
+        delete toDelete;
+    } while(currentLoop != f->l);
 
-        current = current->next;
-        delete current->prev;
-    } while(current != f->loops);
-
-    // remove edge from list of edges in mesh.
+    // remove face from list of faces in mesh.
     if(f->mNext == f && f->mPrev == f) {
         f->m->faces = nullptr;
     } else {

@@ -12,19 +12,19 @@ class Vert;
 class Edge;
 class Face;
 class Mesh;
-class FaceLoopList;
 
 class Loop {
     friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
     friend void KillFace(Face*);
     friend void MakeFace(std::vector<Edge*>, Face*);
-    friend void MakeFace(std::vector<Loop*>, Face*);
+    friend void MakeFace(Loop*, Face*);
     friend void MakeLoop(std::vector<Edge*>, std::vector<Vert*>, Loop*);
+    friend void GlueVert(Vert*, Vert*);
+    friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
 
     friend class Edge;
     friend class Face;
     friend class Vert;
-    friend class FaceLoopList;
 
   public:
     std::size_t index;   // index of this vert, not updated automatically, used for tools

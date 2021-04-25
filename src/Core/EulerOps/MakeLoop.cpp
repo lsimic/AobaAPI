@@ -7,6 +7,10 @@ namespace Aoba {
 namespace Core {
 
 void MakeLoop(std::vector<Edge*> edges, std::vector<Vert*> verts, Loop* first) {
+    if(edges.size() < 3 || verts.size() < 3) {
+        throw std::invalid_argument("Face must have at least 3 distinct edges.");
+    }
+
     std::vector<Loop*> newLoops = std::vector<Loop*>();
     newLoops.reserve(edges.size());
 
@@ -14,8 +18,6 @@ void MakeLoop(std::vector<Edge*> edges, std::vector<Vert*> verts, Loop* first) {
     for(std::size_t i = 0; i < edges.size() - 1; i++) {
         newLoops.push_back(new Loop());
     }
-
-    // TODO: implement loop verification here?
 
     // create loops for each vert-edge pair
     for(std::size_t i = 0; i < edges.size(); ++i) {

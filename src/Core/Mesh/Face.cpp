@@ -10,7 +10,7 @@ namespace Aoba {
 namespace Core {
 
 Face::Face() {
-    loops = nullptr;
+    l = nullptr;
     m = nullptr;
     mNext = nullptr;
     mPrev = nullptr;
@@ -46,23 +46,17 @@ float Face::CalcPerimiter() const {
 }
 
 void Face::NormalFlip() { // TODO:
-    FaceLoopList* currentLoopList = this->loops;
-
-    while(currentLoopList->next != this->loops) {
-        Loop* currentLoop = currentLoopList->first;
-        do {
-            if(currentLoop->v == currentLoop->e->v1) {
-                currentLoop->v = currentLoop->e->v2;
-            } else {
-                currentLoop->v = currentLoop->e->v1;
-            }
-            Loop* toModify = currentLoop;
-            currentLoop = currentLoop->fNext;
-            std::swap(toModify->fNext, toModify->fPrev);
-        } while(currentLoop != currentLoopList->first);
-
-        currentLoopList = currentLoopList->next;
-    }
+    Loop* currentLoop = l;
+    do {
+        if(currentLoop->v == currentLoop->e->v1) {
+            currentLoop->v = currentLoop->e->v2;
+        } else {
+            currentLoop->v = currentLoop->e->v1;
+        }
+        Loop* toModify = currentLoop;
+        currentLoop = currentLoop->fNext;
+        std::swap(toModify->fNext, toModify->fPrev);
+    } while(currentLoop != l);
 }
 
 void Face::NormalUpdate() { // TODO:
@@ -71,70 +65,41 @@ void Face::NormalUpdate() { // TODO:
 
 const std::vector<Edge*> Face::Edges() const {
     std::vector<Edge*> result = std::vector<Edge*>();
-    // iterate over all loop lists (all loops of the face)
-    FaceLoopList* currentLoopList = this->loops;
+    // iterate over all loops in face
+    Loop* currentLoop = l;
     do {
-        // iterate over all loops in current list
-        Loop* currentLoop = currentLoopList->first;
-        do {
-            if(std::find(result.begin(), result.end(), currentLoop->e) == result.end()) { // check if already added
-                result.push_back(currentLoop->e);
-            }
-            currentLoop = currentLoop->fNext;
-        } while(currentLoop != currentLoopList->first);
-        currentLoopList = currentLoopList->next;
-    } while(currentLoopList != this->loops);
+        if(std::find(result.begin(), result.end(), currentLoop->e) == result.end()) { // check if already added
+            result.push_back(currentLoop->e);
+        }
+        currentLoop = currentLoop->fNext;
+    } while(currentLoop != l);
     return result;
 }
 
 const std::vector<Vert*> Face::Verts() const {
     std::vector<Vert*> result = std::vector<Vert*>();
-    // iterate over all loop lists (all loops of the face)
-    FaceLoopList* currentLoopList = this->loops;
+    // iterate over all loops in current list
+    Loop* currentLoop = l;
     do {
-        // iterate over all loops in current list
-        Loop* currentLoop = currentLoopList->first;
-        do {
-            if(std::find(result.begin(), result.end(), currentLoop->v) == result.end()) { // check if already added
-                result.push_back(currentLoop->v);
-            }
-            currentLoop = currentLoop->fNext;
-        } while(currentLoop != currentLoopList->first);
-        currentLoopList = currentLoopList->next;
-    } while(currentLoopList != this->loops);
+        if(std::find(result.begin(), result.end(), currentLoop->v) == result.end()) { // check if already added
+            result.push_back(currentLoop->v);
+        }
+        currentLoop = currentLoop->fNext;
+    } while(currentLoop != l);
     return result;
 }
 
-const std::vector<FaceLoopList*> Face::LoopLists() const {
-    std::vector<FaceLoopList*> result = std::vector<FaceLoopList*>();
-    FaceLoopList* current = this->loops;
-
-    result.push_back(current);
-    while(current->next != this->loops) {
-        current = current->next;
-        result.push_back(current);
-    }
-
-    return result;
-}
-
-const std::vector<Loop*> FaceLoopList::Loops() const {
+const std::vector<Loop*> Face::Loops() const {
     std::vector<Loop*> result = std::vector<Loop*>();
-    Loop* current = this->first;
+    Loop* current = l;
 
     result.push_back(current);
-    while(current->fNext != this->first) {
+    while(current->fNext != l) {
         current = current->fNext;
         result.push_back(current);
     }
 
     return result;
-}
-
-FaceLoopList::FaceLoopList() {
-    next = nullptr;
-    prev = nullptr;
-    first = nullptr;
 }
 
 } // namespace Core

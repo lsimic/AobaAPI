@@ -15,41 +15,21 @@ class Mesh;
 class Edge;
 class Vert;
 
-class FaceLoopList {
-    friend void KillFace(Face*);
-    friend void MakeFace(std::vector<Edge*>, Face*);
-    friend void MakeFace(std::vector<Loop*>, Face*);
-
-    friend class Face;
-
-  private:
-    FaceLoopList* next; // List of loops which form the face boundary.
-    FaceLoopList* prev; // List of loops which form the face boundary.
-    Loop* first;        // Any Element of the loop. Use first->fNext/fPrev for traversal.
-
-  public:
-    FaceLoopList();
-
-    /// <summary>
-    /// All loops in this Loop. Ordered.
-    /// </summary>
-    /// <returns>TODO</returns>
-    const std::vector<Loop*> Loops() const;
-};
-
 class Face {
     friend void KillFace(Face*);
     friend void KillMesh(Mesh*);
     friend void MakeFace(std::vector<Edge*>, Face*);
-    friend void MakeFace(std::vector<Loop*>, Face*);
+    friend void MakeFace(Loop*, Face*);
+    friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
+    friend void GlueVert(Vert*, Vert*);
 
     friend class Mesh;
 
   private:
-    FaceLoopList* loops; // List of loops which form the face boundary
-    Mesh* m;             // Pointer to parent mesh. Could potentialy be ommited but might pose a safety issue.
-    Face* mNext;         // list of all faces in the mesh
-    Face* mPrev;         // List of all faces in the mesh
+    Loop* l;     // First loop in a list of loops which form the face boundary. use fNext/fPrev for traversal
+    Mesh* m;     // Pointer to parent mesh. Could potentialy be ommited but might pose a safety issue.
+    Face* mNext; // list of all faces in the mesh
+    Face* mPrev; // List of all faces in the mesh
   public:
     std::size_t index;   // index of this vert, not updated automatically, used for tools
     int32_t flags;       // flags available for use in other tools
@@ -103,7 +83,7 @@ class Face {
     /// List of all loops of the face. Do not use this list to modify the face, use EulerOps instead.
     /// </summary>
     /// <returns>TODO </returns>
-    const std::vector<FaceLoopList*> LoopLists() const;
+    const std::vector<Loop*> Loops() const;
 };
 
 } // namespace Core

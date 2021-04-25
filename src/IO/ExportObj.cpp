@@ -26,7 +26,7 @@ void ExportObj(std::string path, Core::Mesh* mesh) {
         outFile << "f ";
 
         // basic obj export, only do the single/first loop
-        std::vector<Core::Loop*> loops = faces.at(i)->LoopLists().at(0)->Loops();
+        std::vector<Core::Loop*> loops = faces.at(i)->Loops();
 
         for(std::size_t j = 0; j < loops.size(); ++j) {
             outFile << loops.at(j)->LoopVert()->index << " ";
