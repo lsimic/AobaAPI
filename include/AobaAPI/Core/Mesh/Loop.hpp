@@ -21,6 +21,7 @@ class Loop {
     friend void MakeLoop(std::vector<Edge*>, std::vector<Vert*>, Loop*);
     friend void GlueVert(Vert*, Vert*);
     friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
+    friend void GlueFace(Face*, Edge*, Face*, Edge*);
 
     friend class Edge;
     friend class Face;
