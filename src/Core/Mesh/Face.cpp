@@ -45,7 +45,7 @@ float Face::CalcPerimiter() const {
     return result;
 }
 
-void Face::NormalFlip() { // TODO:
+void Face::NormalFlip() {
     Loop* currentLoop = l;
     do {
         if(currentLoop->v == currentLoop->e->v1) {
@@ -59,8 +59,25 @@ void Face::NormalFlip() { // TODO:
     } while(currentLoop != l);
 }
 
-void Face::NormalUpdate() { // TODO:
-    // low priority
+void Face::NormalUpdate() { 
+    // source: https://www.khronos.org/opengl/wiki/Calculating_a_Surface_Normal
+    // newell's algorithm
+
+    no.x = 0;
+    no.y = 0;
+    no.z = 0;
+
+    Loop* current = l;
+    do {
+        Math::Vec3& vc = current->v->co;
+        Math::Vec3& vn = current->fNext->v->co;
+        no.x += (vc.y - vn.y) * (vc.z + vn.z);
+        no.y += (vc.z - vn.z) * (vc.x + vn.x);
+        no.z += (vc.x - vn.x) * (vc.y + vn.y);
+        current = current->fNext;
+    } while(current != l);
+
+    no.Normalize();
 }
 
 const std::vector<Edge*> Face::Edges() const {
