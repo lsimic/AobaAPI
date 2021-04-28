@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <functional>
 
 namespace Aoba {
 namespace Core {
@@ -84,6 +85,27 @@ class Face {
     /// </summary>
     /// <returns>TODO </returns>
     const std::vector<Loop*> Loops() const;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)>) const;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)>) const;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)>) const;
 };
 
 } // namespace Core

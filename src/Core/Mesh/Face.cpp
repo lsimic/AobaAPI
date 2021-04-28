@@ -119,5 +119,52 @@ const std::vector<Loop*> Face::Loops() const {
     return result;
 }
 
+const std::vector<Edge*> Face::Edges(std::function<bool(const Edge* const)> func) const {
+    std::vector<Edge*> result = std::vector<Edge*>();
+    // iterate over all loops in face
+    Loop* currentLoop = l;
+    do {
+        if(func(currentLoop->e)) {
+            if(std::find(result.begin(), result.end(), currentLoop->e) == result.end()) { // check if already added
+                result.push_back(currentLoop->e);
+            }
+        }
+        currentLoop = currentLoop->fNext;
+    } while(currentLoop != l);
+    return result;
+}
+
+const std::vector<Vert*> Face::Verts(std::function<bool(const Vert* const)> func) const {
+    std::vector<Vert*> result = std::vector<Vert*>();
+    // iterate over all loops in current list
+    Loop* currentLoop = l;
+    do {
+        if(func(currentLoop->v)) {
+            if(std::find(result.begin(), result.end(), currentLoop->v) == result.end()) { // check if already added
+                result.push_back(currentLoop->v);
+            }
+        }
+        currentLoop = currentLoop->fNext;
+    } while(currentLoop != l);
+    return result;
+}
+
+const std::vector<Loop*> Face::Loops(std::function<bool(const Loop* const)> func) const {
+    std::vector<Loop*> result = std::vector<Loop*>();
+    Loop* current = l;
+
+    if(func(current)) {
+        result.push_back(current);
+    }
+    while(current->fNext != l) {
+        current = current->fNext;
+        if(func(current)) {
+            result.push_back(current);
+        }
+    }
+
+    return result;
+}
+
 } // namespace Core
 } // namespace Aoba

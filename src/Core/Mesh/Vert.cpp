@@ -157,5 +157,90 @@ const std::vector<Face*> Vert::Faces() const {
     return result;
 }
 
+const std::vector<Loop*> Vert::Loops() const {
+    // fetch loops using edges
+    std::vector<Loop*> result = std::vector<Loop*>();
+    if(this->e == nullptr) {
+        return result; // no adjecent edges, therefore no adjecent loops
+    }
+    Edge* currentEdge = this->e;
+    while(this->e != currentEdge->Next(this)) {
+        Loop* currentLoop = currentEdge->l;
+        do {
+            if(currentLoop->v == this) {
+                result.push_back(currentLoop);
+            }
+            currentLoop = currentLoop->eNext;
+        } while(currentLoop != currentEdge->l);
+        currentEdge = currentEdge->Next(this);
+    }
+    return result;
+}
+
+const std::vector<Edge*> Vert::Edges(std::function<bool(const Edge* const)> func) const {
+    std::vector<Edge*> result = std::vector<Edge*>();
+    if(this->e == nullptr) {
+        return result; // no adjecent edges.
+    }
+    Edge* currentEdge = this->e;
+    if(func(currentEdge)) {
+        result.push_back(currentEdge);
+    }
+    while(this->e != currentEdge->Next(this)) {
+        currentEdge = currentEdge->Next(this);
+        if(func(currentEdge)) {
+            result.push_back(currentEdge);
+        }
+    }
+    return result;
+}
+
+const std::vector<Face*> Vert::Faces(std::function<bool(const Face* const)> func) const {
+    std::vector<Face*> result = std::vector<Face*>();
+    if(this->e == nullptr) {
+        return result;
+    }
+    // loop over all edges of this vert
+    Edge* currentEdge = this->e;
+    do {
+        // loop over all loops of the current edge
+        if(currentEdge->l != nullptr) {
+            Loop* currentLoop = currentEdge->l;
+            do {
+                if(func(currentLoop->f)) {
+                    // if the loop's face not already in the list, add it to the list
+                    if(std::find(result.begin(), result.end(), currentLoop->f) == result.end()) {
+                        result.push_back(currentLoop->f);
+                    }
+                }
+            } while(currentEdge->l != currentLoop);
+        }
+        currentEdge = currentEdge->Next(this);
+    } while(this->e != currentEdge);
+    return result;
+}
+
+const std::vector<Loop*> Vert::Loops(std::function<bool(const Loop* const)> func) const {
+    // fetch loops using edges
+    std::vector<Loop*> result = std::vector<Loop*>();
+    if(this->e == nullptr) {
+        return result; // no adjecent edges, therefore no adjecent loops
+    }
+    Edge* currentEdge = this->e;
+    while(this->e != currentEdge->Next(this)) {
+        Loop* currentLoop = currentEdge->l;
+        do {
+            if(currentLoop->v == this) {
+                if(func(currentLoop)) {
+                    result.push_back(currentLoop);
+                }
+            }
+            currentLoop = currentLoop->eNext;
+        } while(currentLoop != currentEdge->l);
+        currentEdge = currentEdge->Next(this);
+    }
+    return result;
+}
+
 } // namespace Core
 } // namespace Aoba

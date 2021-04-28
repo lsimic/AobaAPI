@@ -5,6 +5,7 @@
 #include "../EulerOps.hpp"
 
 #include <vector>
+#include <functional>
 
 namespace Aoba {
 namespace Core {
@@ -67,6 +68,27 @@ class Mesh {
     /// </summary>
     /// <returns>List containing references to all Faces inside the mesh. </returns>
     const std::vector<Face*> Faces() const;
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)>) const;
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)>) const;
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Face*> Faces(std::function<bool(const Face* const)>) const;
 };
 
 } // namespace Core

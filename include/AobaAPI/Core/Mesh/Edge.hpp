@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <functional>
 
 namespace Aoba {
 namespace Core {
@@ -123,16 +124,37 @@ class Edge {
     const std::vector<Face*> Faces() const;
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Face*> Faces(std::function<bool(const Face* const)>) const;
+
+    /// <summary>
     /// List of all Loops that use this edge. Do not use this list to add new Loops, use EulerOps instead.
     /// </summary>
     /// <returns>Unordered List containing references to all Loops which use this edge.</returns>
     const std::vector<Loop*> Loops() const;
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)>) const;
+
+    /// <summary>
     /// List of all Verts of the edge. Do not use this list to change verts, use EulerOps instead.
     /// </summary>
-    /// <returns>Unordered List containing references to all verts of this edge,
+    /// <returns>Unordered List containing references to all verts of this edge.</returns>
     const std::vector<Vert*> Verts() const;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)>) const;
 
     /// <summary>
     /// V1 of this edge. Do not use this to change the verts, use EulerOps instead.

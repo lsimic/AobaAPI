@@ -32,5 +32,9 @@ Loop::Loop() {
     m = nullptr;
 }
 
+Face* Loop::LoopFace() const {
+    return f;
+}
+
 } // namespace Core
 } // namespace Aoba

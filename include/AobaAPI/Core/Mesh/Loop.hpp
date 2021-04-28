@@ -45,6 +45,7 @@ class Loop {
     Loop();
     Vert* LoopVert() const;
     Edge* LoopEdge() const;
+    Face* LoopFace() const;
 };
 
 } // namespace Core

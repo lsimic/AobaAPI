@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <functional>
 
 namespace Aoba {
 namespace Core {
@@ -76,6 +77,35 @@ class Vert {
     /// </summary>
     /// <returns>List containing references to all faces using this vert.</returns>
     const std::vector<Face*> Faces() const;
+
+    /// <summary>
+    /// List of all loops which start in this vert. Do not use this list to add new loops, use EulerOps instead.
+    /// </summary>
+    /// <returns></returns>
+    const std::vector<Loop*> Loops() const;
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)>) const;
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Face*> Faces(std::function<bool(const Face* const)>) const;
+
+    
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)>) const;
+
 };
 } // namespace Core
 } // namespace Aoba

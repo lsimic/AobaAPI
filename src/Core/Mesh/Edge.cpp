@@ -174,6 +174,56 @@ const std::vector<Vert*> Edge::Verts() const {
     return std::vector<Vert*> {this->v1, this->v2};
 }
 
+const std::vector<Face*> Edge::Faces(std::function<bool(const Face* const)> func) const {
+    std::vector<Face*> result = std::vector<Face*>();
+    if(this->l == nullptr) {
+        return result;
+    }
+
+    Loop* currentLoop = this->l;
+    do {
+        if(func(currentLoop->f)) {
+            // check if the face already added
+            // handles edges which are used by the same face in multiple orientations
+            if(std::find(result.begin(), result.end(), currentLoop->f) == result.end()) {
+                // face not present, add to result
+                result.push_back(currentLoop->f);
+            }
+        }
+        currentLoop = currentLoop->eNext;
+    } while(currentLoop != this->l);
+    return result;
+}
+
+const std::vector<Loop*> Edge::Loops(std::function<bool(const Loop* const)> func) const {
+    std::vector<Loop*> result = std::vector<Loop*>();
+    if(this->l == nullptr) {
+        return result;
+    }
+
+    Loop* currentLoop = this->l;
+    do {
+        if(func(currentLoop)) {
+            result.push_back(currentLoop);
+        }
+        currentLoop = currentLoop->eNext;
+    } while(currentLoop != this->l);
+    return result;
+}
+
+const std::vector<Vert*> Edge::Verts(std::function<bool(const Vert* const)> func) const {
+    std::vector<Vert*> result = std::vector<Vert*>();
+
+    if(func(v1)) {
+        result.push_back(v1);
+    }
+    if(func(v2)) {
+        result.push_back(v2);
+    }
+    return result;
+}
+
+
 Vert* Edge::V1() const {
     return v1;
 }

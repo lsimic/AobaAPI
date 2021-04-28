@@ -76,5 +76,50 @@ const std::vector<Face*> Mesh::Faces() const {
     return result;
 }
 
+const std::vector<Vert*> Mesh::Verts(std::function<bool(const Vert* const)> func) const {
+    std::vector<Vert*> result = std::vector<Vert*>();
+    if(verts == nullptr) {
+        return result;
+    }
+    Vert* currentVert = verts;
+    do {
+        if(func(currentVert)) {
+            result.push_back(currentVert);
+        }
+        currentVert = currentVert->mNext;
+    } while(verts != currentVert);
+    return result;
+}
+
+const std::vector<Edge*> Mesh::Edges(std::function<bool(const Edge* const)> func) const {
+    std::vector<Edge*> result = std::vector<Edge*>();
+    if(edges == nullptr) {
+        return result;
+    }
+    Edge* currentEdge = edges;
+    do {
+        if(func(currentEdge)) {
+            result.push_back(currentEdge);
+        }
+        currentEdge = currentEdge->mNext;
+    } while(edges != currentEdge);
+    return result;
+}
+
+const std::vector<Face*> Mesh::Faces(std::function<bool(const Face* const)> func) const {
+    std::vector<Face*> result = std::vector<Face*>();
+    if(faces == nullptr) {
+        return result;
+    }
+    Face* currentFace = faces;
+    do {
+        if(func(currentFace)) {
+            result.push_back(currentFace);
+        }
+        currentFace = currentFace->mNext;
+    } while(faces != currentFace);
+    return result;
+}
+
 } // namespace Core
 } // namespace Aoba
