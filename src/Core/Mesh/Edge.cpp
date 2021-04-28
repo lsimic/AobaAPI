@@ -223,7 +223,6 @@ const std::vector<Vert*> Edge::Verts(std::function<bool(const Vert* const)> func
     return result;
 }
 
-
 Vert* Edge::V1() const {
     return v1;
 }

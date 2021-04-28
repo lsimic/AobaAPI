@@ -16,7 +16,7 @@ Vec3::Vec3(const Vec4& vec) : x(vec.x), y(vec.y), z(vec.z) {
 }
 
 float Vec3::Angle(const Vec3& other) const {
-    return 2 * atanf(((*this) - other).Length()) / atanf(((*this) + other).Length());
+    return acosf(Dot(other) / (Length() * other.Length()));
 }
 
 Vec3 Vec3::Cross(const Vec3& other) const {
