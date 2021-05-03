@@ -2,6 +2,7 @@
 #define AOBA_CORE_MESH_EDGE_HPP
 
 #include "../EulerOps.hpp"
+#include "../../Math/Vector/Vector3.hpp"
 
 #include <cstdint>
 #include <vector>
@@ -61,6 +62,13 @@ class Edge {
     /// <param name="v"></param>
     /// <returns></returns>
     Edge* Prev(const Vert* v) const;
+
+    /// <summary>
+    /// Calculate the local face normal (adjecent triangle or quad)
+    /// </summary>
+    /// <param name="loop">Loop of this edge to use for calculation.</param>
+    /// <returns></returns>
+    Math::Vec3 CalcLocalNormal(Loop* loop) const;
 
   public:
     Edge();

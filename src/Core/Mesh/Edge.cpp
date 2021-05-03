@@ -45,20 +45,62 @@ Edge* Edge::Prev(const Vert* v) const {
     throw std::invalid_argument("Specified vert not used by the edge.");
 }
 
-float Edge::CalcFaceAngle() const { // TODO:
-    // check if adjecent to exactly two faces
-    // use normals to calculate
-    // low priority
-    // how to handle non-flat faces?
-    return 0;
+;Math::Vec3 Edge::CalcLocalNormal(Loop* loop) const {
+    // use v1, v2, loop->fPrev.v
+    Math::Vec3 result = Math::Vec3();
+
+    Loop* current = loop->fPrev;
+    do {
+        Math::Vec3& vc = current->v->co;
+        Math::Vec3& vn = current->fNext->v->co;
+        result.x += (vc.y - vn.y) * (vc.z + vn.z);
+        result.y += (vc.z - vn.z) * (vc.x + vn.x);
+        result.z += (vc.x - vn.x) * (vc.y + vn.y);
+        current = current->fNext;
+    } while(current != loop->fNext->fNext);
+    //if face is not triangular, additional iteration to make a quad
+    if(loop->fNext->fNext != loop->fPrev) {
+        Math::Vec3& vc = loop->fNext->fNext->v->co;
+        Math::Vec3& vn = loop->fPrev->v->co;
+        result.x += (vc.y - vn.y) * (vc.z + vn.z);
+        result.y += (vc.z - vn.z) * (vc.x + vn.x);
+        result.z += (vc.x - vn.x) * (vc.y + vn.y);
+    }
+
+    result.Normalize();
+    return result;
 }
 
-float Edge::CalcFaceAngleSigned() const { // TODO:
-    // check if adjecent to exactly two faces
-    // use normals to calculate
-    // low priority
-    // how to handle non-flat faces?
-    return 0;
+float Edge::CalcFaceAngle() const { 
+    // check if edge has exactly two faces
+    if(l == nullptr || l->eNext != l || l->eNext != l->ePrev) {
+        throw std::invalid_argument("Edge must have exactly two faces");
+    }
+
+    // calculate nearby normals for this edge. Usefull if face is not flat
+    Math::Vec3 no1 = CalcLocalNormal(l);
+    Math::Vec3 no2 = CalcLocalNormal(l->eNext);
+    return no1.Angle(no2);
+}
+
+float Edge::CalcFaceAngleSigned() const { 
+    // check if edge has exactly two faces
+    if(l == nullptr || l->eNext != l || l->eNext != l->ePrev) {
+        throw std::invalid_argument("Edge must have exactly two faces");
+    }
+
+    // calculate nearby normals for this edge. Usefull if face is not flat
+    Math::Vec3 no1 = CalcLocalNormal(l);
+    Math::Vec3 no2 = CalcLocalNormal(l->eNext);
+
+    Math::Vec3 cross = no1.Cross(no2);
+    Math::Vec3 dir = l->fNext->v->co - l->v->co;
+
+    if(dir.Dot(cross) > 0.0f) {
+        return no1.Angle(no2);
+    } else {
+        return -(no1.Angle(no2));
+    }
 }
 
 float Edge::CalcLength() const {
