@@ -118,6 +118,9 @@ Vert* Edge::Other(const Vert* v) const {
 }
 
 bool Edge::IsBoundary() const {
+    if(this->l == nullptr) {
+        return false;
+    }
     if(this->l == this->l->eNext && this->l == this->l->ePrev) {
         return true;
     }

@@ -16,4 +16,5 @@ target_sources(
 	${CMAKE_CURRENT_SOURCE_DIR}/MakeLoop.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MakeVert.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ManifoldMakeEdge.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ValidateLoop.cpp
 )

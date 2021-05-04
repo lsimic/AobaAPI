@@ -65,7 +65,7 @@ class ExtrudeVertsResult {
 
 const ExtrudeVertsResult ExtrudeVerts(Core::Mesh* m, const std::vector<Core::Vert*>& verts);
 
-Core::Face* MakeFace(Core::Mesh* m, const std::vector<Core::Edge*>& edges);
+Core::Face* MakeFace(Core::Mesh* m, std::vector<Core::Edge*> edges);
 
 class InsetFacesResult {
   public:

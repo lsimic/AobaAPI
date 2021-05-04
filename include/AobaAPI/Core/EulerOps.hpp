@@ -122,6 +122,18 @@ void MakeEdge(Vert* v1, Vert* v2, Edge* newe);
 void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv);
 
 /// <summary>
+/// Checks wether the provided edges and verts form a valid loop. 
+/// loop is valid if: Each edge is used only once, each vert is used only once and all provided edges and verts form a 
+/// closed circuit. 
+/// There is no need to always validate the loop before creating. You can skip if you *know* that the loop is valid.
+/// The only default high-level op where this is used is MakeFace. 
+/// </summary>
+/// <param name="edges"></param>
+/// <param name="verts"></param>
+/// <returns></returns>
+bool ValidateLoop(std::vector<Edge*> edges, std::vector<Vert*> verts);
+
+/// <summary>
 /// Creates a new face using the specified loops, where each element in loops parameter is a pointer to the first
 /// item in the closed circuit of loops. This methods allows for creation of faces with holes/multiple loops.
 /// Use the MakeLoop EulerOp to create all necessary loops. Loops must be traversable using fNext/fPrev.
@@ -130,14 +142,6 @@ void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv);
 /// <param name="loops"></param>
 /// <param name="newf"></param>
 void MakeFace(Loop* loop, Face* newf);
-
-/// <summary>
-/// Creates a new face newf with its single loop newl bounded by the single circuit of edges as specified in edges. The
-/// list of edges specified by edges must form a true circuit or an error will result and no action will be performed.
-/// </summary>
-/// <param name="edges"></param>
-/// <param name="newf"></param>
-void MakeFace(std::vector<Edge*> edges, Face* newf);
 
 /// <summary>
 /// Creates a new loop where each orientation is specified in an ordered list of edges and verts.

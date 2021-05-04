@@ -27,7 +27,6 @@ class Edge {
     friend void KillMesh(Mesh*);
     friend void MakeEdge(Vert*, Vert*, Edge*);
     friend void MakeEdgeVert(Vert*, Edge*, Vert*);
-    friend void MakeFace(std::vector<Edge*>, Face*);
     friend void MakeLoop(std::vector<Edge*>, std::vector<Vert*>, Loop*);
     friend void GlueVert(Vert*, Vert*); 
     friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);

@@ -22,7 +22,6 @@ class Mesh {
     friend void KillVert(Vert*);
     friend void MakeEdge(Vert*, Vert*, Edge*);
     friend void MakeEdgeVert(Vert*, Edge*, Vert*);
-    friend void MakeFace(std::vector<Edge*>, Face*);
     friend void MakeFace(Loop*, Face*);
     friend void MakeVert(Mesh*, Vert*);
     friend void GlueVert(Vert*, Vert*);
