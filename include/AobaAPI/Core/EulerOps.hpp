@@ -159,16 +159,6 @@ void MakeLoop(std::vector<Edge*> edges, std::vector<Vert*> verts, Loop* newl);
 void MakeVert(Mesh* m, Vert* newv);
 
 /// <summary>
-/// Creates a manifold edge and a vertex. The new edge newe starts at existing vertex v and ends at the new vertex newv.
-/// The edge and vertex are created in the face F.
-/// </summary>
-/// <param name="v"></param>
-/// <param name="f"></param>
-/// <param name="newe"></param>
-/// <param name="newv"></param>
-void ManifoldMakeEdgeVert(Vert* v, Face* f, Edge* newe, Vert* newv);
-
-/// <summary>
 /// Creates an edge between the existing vertices v1 and v2. The edge is created in the face f. Verts v1 and v2 must be
 ///  on the boundary of face f or an error will result and no action will be performed.
 /// </summary>
