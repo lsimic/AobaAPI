@@ -25,6 +25,7 @@ class Loop {
     friend class Edge;
     friend class Face;
     friend class Vert;
+    friend class Mesh;
 
   public:
     std::size_t index;   // index of this vert, not updated automatically, used for tools
