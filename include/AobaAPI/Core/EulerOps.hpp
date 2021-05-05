@@ -15,13 +15,11 @@ class Loop;
 /// <summary>
 /// Deletes the Edge e and joins the faces which touch upon Edge e into a single face. If the operation would result
 /// in the creation of a non manifold face (which occours when edge is used three or more times) an error will result
-/// and no operation will be performed. The optional parameter f specifies which face will be the surviving face. In
-/// any case, the fSurvivor return parameter will be populated.
+/// and no operation will be performed. The parameter fSurvivor specifies which face will be the surviving face.
 /// </summary>
 /// <param name="e"></param>
-/// <param name="f"></param>
 /// <param name="fSurvivor"></param>
-void DissolveEdge(Edge* e, Face* f, Face* fSurvivor);
+void DissolveEdge(Edge* e, Face* fSurvivor);
 
 // TODO: should also make a DissolveVert operator, but i'm not sure about the behaviour
 // what happens if Vert is used by three or more wire edges?

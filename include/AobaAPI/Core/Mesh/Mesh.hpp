@@ -26,6 +26,7 @@ class Mesh {
     friend void MakeVert(Mesh*, Vert*);
     friend void GlueVert(Vert*, Vert*);
     friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
+    friend void DissolveEdge(Edge*, Face*);
 
   private:
     Vert* verts; // List of all verts in the mesh.
