@@ -96,12 +96,11 @@ class MirrorResult {
     std::vector<Core::Face*> faces;
     std::vector<Core::Edge*> edges;
     std::vector<Core::Vert*> mergedVerts;
-    std::vector<Core::Face*> mergedFaces;
-    std::vector<Core::Edge*> mergedEdges;
 };
 
 const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const std::vector<Core::Edge*>& edges,
-    const std::vector<Core::Face*>& faces, const Math::Vec3& axis, const Math::Vec3& center, float mergeDist);
+    const std::vector<Core::Face*>& faces, const Math::Vec3& axis, const Math::Vec3& center, bool merge,
+    float mergeDist);
 
 void RecalculateFaceNormals(Core::Mesh* m, const std::vector<Core::Face*>& faces);
 
