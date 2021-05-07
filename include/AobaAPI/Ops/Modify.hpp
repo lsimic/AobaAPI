@@ -78,18 +78,6 @@ class InsetFacesResult {
 
 const InsetFacesResult InsetFaces(Core::Mesh* m, const std::vector<Core::Face*>& faces, float distance);
 
-class InsetFaceRegionResult {
-  public:
-    std::vector<Core::Vert*> verts;
-    std::vector<Core::Face*> centerFaces;
-    std::vector<Core::Edge*> centerEdges;
-    std::vector<Core::Face*> boundaryFaces;
-    std::vector<Core::Edge*> boundaryEdges;
-    std::vector<Core::Edge*> interiorEdges;
-};
-
-const InsetFaceRegionResult InsetFaceRegion(Core::Mesh* m, const std::vector<Core::Face*>& faces, float distance);
-
 class MirrorResult {
   public:
     std::vector<Core::Vert*> verts;
