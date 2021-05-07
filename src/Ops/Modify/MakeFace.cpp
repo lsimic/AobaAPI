@@ -16,8 +16,18 @@ Core::Face* MakeFace(Core::Mesh* m, std::vector<Core::Edge*> edges) {
     std::vector<Core::Vert*> loopVerts = std::vector<Core::Vert*>();
 
     loopEdges.push_back(edges.at(0));
-    loopVerts.push_back(edges.at(0)->V1());
-    loopVerts.push_back(edges.at(0)->V2());
+    if(edges.at(0)->IsBoundary()) {
+        if(edges.at(0)->Loops().at(0)->LoopVert() == edges.at(0)->V1()) {
+            loopVerts.push_back(edges.at(0)->V2());
+            loopVerts.push_back(edges.at(0)->V1());
+        } else {
+            loopVerts.push_back(edges.at(0)->V1());
+            loopVerts.push_back(edges.at(0)->V2());
+        }
+    } else {
+        loopVerts.push_back(edges.at(0)->V1());
+        loopVerts.push_back(edges.at(0)->V2());
+    }
 
     edges.erase(edges.begin()); // remove first edge from input edges
 
