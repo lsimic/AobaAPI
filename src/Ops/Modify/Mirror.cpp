@@ -1,5 +1,7 @@
 #include "AobaAPI/Ops/Modify.hpp"
 
+#include <cmath>
+
 namespace Aoba {
 namespace Ops {
 
@@ -37,7 +39,7 @@ const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, 
         newv->co += center;
 
         // if coordinate is within merge dist, mark for merging
-        if(abs((verts.at(i)->co - center).Dot(axis) < mergeDist)) {
+        if(fabsf((verts.at(i)->co - center).Dot(axis)) < mergeDist) {
             vertsToMerge.push_back(verts.at(i));
         }
     }
@@ -76,7 +78,7 @@ const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, 
             v1->co += center;
 
             // if coordinate is within merge dist, mark for merging
-            if(abs((current->Verts().at(0)->co - center).Dot(axis) < mergeDist)) {
+            if(fabsf((current->Verts().at(0)->co - center).Dot(axis)) < mergeDist) {
                 vertsToMerge.push_back(current->Verts().at(0));
             }
         }
@@ -100,7 +102,7 @@ const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, 
             v2->co += center;
 
             // if coordinate is within merge dist, mark for merging
-            if(abs((current->Verts().at(1)->co - center).Dot(axis) < mergeDist)) {
+            if(fabsf((current->Verts().at(1)->co - center).Dot(axis)) < mergeDist) {
                 vertsToMerge.push_back(current->Verts().at(1));
             }
         }
@@ -143,7 +145,7 @@ const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, 
                 newv->co += center;
 
                 // if coordinate is within merge dist, mark for merging
-                if(abs((loops.at(k)->LoopVert()->co - center).Dot(axis) < mergeDist)) {
+                if(fabsf((loops.at(k)->LoopVert()->co - center).Dot(axis)) < mergeDist) {
                     vertsToMerge.push_back(loops.at(k)->LoopVert());
                 }
             }
@@ -180,7 +182,7 @@ const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, 
                     v1->co += center;
 
                     // if coordinate is within merge dist, mark for merging
-                    if(abs((current->Verts().at(0)->co - center).Dot(axis) < mergeDist)) {
+                    if(fabsf((current->Verts().at(0)->co - center).Dot(axis)) < mergeDist) {
                         vertsToMerge.push_back(current->Verts().at(0));
                     }
                 }
@@ -204,7 +206,7 @@ const MirrorResult Mirror(Core::Mesh* m, const std::vector<Core::Vert*>& verts, 
                     v2->co += center;
 
                     // if coordinate is within merge dist, mark for merging
-                    if(abs((current->Verts().at(1)->co - center).Dot(axis) < mergeDist)) {
+                    if(fabsf((current->Verts().at(1)->co - center).Dot(axis)) < mergeDist) {
                         vertsToMerge.push_back(current->Verts().at(1));
                     }
                 }

@@ -34,7 +34,7 @@ bool Vec2::Equals(const Vec2& other, float epsilon) const {
     if(fabsf(x - other.x) > epsilon) {
         return false;
     }
-    if(fabsf(y - other.y > epsilon)) {
+    if(fabsf(y - other.y) > epsilon) {
         return false;
     }
     return true;

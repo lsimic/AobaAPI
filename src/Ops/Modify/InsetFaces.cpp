@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <cmath>
+
 namespace Aoba {
 namespace Ops {
 
@@ -21,12 +23,12 @@ Math::Vec3 CalcVertOffset(Math::Vec3 no1, Math::Vec3 no2) {
     if(angle < 0.0000001f) {
         return no1; // no1 and no2 are practically equal, therefore edges are paralel
     }
-    if(abs(PI - angle) < 0.00001f) {
+    if(fabsf(PI - angle) < 0.00001f) {
         // the edges in question are really pointy, and the vector would go towards infinity
         // TODO: what t return in this case?
         return result;
     }
-    result *= abs(1 / (cosf((angle) / 2)));
+    result *= fabsf(1 / (cosf((angle) / 2)));
     return result;
 }
 

@@ -101,7 +101,7 @@ float Mat3::Determinant() const {
 
 bool Mat3::Equals(const Mat3& other, float epsilon) {
     for(std::size_t idx = 0; idx < 9; idx++) {
-        if(abs(data[idx] - other.data[idx]) < epsilon) {
+        if(fabsf(data[idx] - other.data[idx]) < epsilon) {
             return false;
         }
     }

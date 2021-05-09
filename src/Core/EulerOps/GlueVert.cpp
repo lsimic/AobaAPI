@@ -1,6 +1,8 @@
 #include "AobaAPI/Core/EulerOps.hpp"
 #include "AobaAPI/Core/Mesh.hpp"
 
+#include <algorithm>
+
 namespace Aoba {
 namespace Core {
 
@@ -166,7 +168,7 @@ void GlueVert(Vert* v1, Vert* v2) {
                         // remove loop from face list of loops
                         loop->fNext->fPrev = loop->fPrev;
                         loop->fPrev->fNext = loop->fNext;
-                        if(face->l = loop) {
+                        if(face->l == loop) {
                             face->l = loop->fNext;
                         }
                         // remove loop from edge list of loops

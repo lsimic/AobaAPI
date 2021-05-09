@@ -136,7 +136,7 @@ float Mat4::Determinant() const {
 
 bool Mat4::Equals(const Mat4& other, float epsilon) {
     for(std::size_t idx = 0; idx < 16; idx++) {
-        if(abs(data[idx] - other.data[idx]) < epsilon) {
+        if(fabsf(data[idx] - other.data[idx]) < epsilon) {
             return false;
         }
     }
