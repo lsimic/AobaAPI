@@ -23,6 +23,7 @@ class Face {
     friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
     friend void GlueVert(Vert*, Vert*);
     friend void DissolveEdge(Edge*, Face*);
+    friend void JoinMesh(Mesh*, Mesh*);
 
     friend class Mesh;
 

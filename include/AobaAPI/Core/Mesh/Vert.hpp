@@ -26,6 +26,7 @@ class Vert {
     friend void MakeEdgeVert(Vert*, Edge*, Vert*);
     friend void MakeVert(Mesh*, Vert*);
     friend void GlueVert(Vert*, Vert*);
+    friend void JoinMesh(Mesh*, Mesh*);
 
   public:
     std::size_t index;   // index of this vert, not updated automatically, used for tools

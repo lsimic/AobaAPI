@@ -22,6 +22,7 @@ class Loop {
     friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
     friend void GlueFace(Face*, Edge*, Face*, Edge*);
     friend void DissolveEdge(Edge*, Face*);
+    friend void JoinMesh(Mesh*, Mesh*);
 
     friend class Edge;
     friend class Face;

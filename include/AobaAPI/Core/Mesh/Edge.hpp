@@ -32,6 +32,7 @@ class Edge {
     friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
     friend void GlueEdge(Edge*, Edge*);
     friend void DissolveEdge(Edge*, Face*);
+    friend void JoinMesh(Mesh*, Mesh*);
 
   public:
     std::size_t index;   // index of this vert, not updated automatically, used for tools

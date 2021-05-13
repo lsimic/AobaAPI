@@ -167,6 +167,13 @@ void MakeVert(Mesh* m, Vert* newv);
 /// <param name="newf"></param>
 void ManifoldMakeEdge(Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf);
 
+/// <summary>
+/// Joins the mesh m2 into the mesh m1, deleting the mesh m2.
+/// </summary>
+/// <param name="m1"></param>
+/// <param name="m2"></param>
+void JoinMesh(Mesh* m1, Mesh* m2);
+
 } // namespace Core
 } // namespace Aoba
 
