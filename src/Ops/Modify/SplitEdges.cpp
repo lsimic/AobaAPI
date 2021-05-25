@@ -1,6 +1,7 @@
 #include "AobaAPI/Ops/Modify.hpp"
 
 #include <algorithm>
+#include <stdexcept>
 
 namespace Aoba {
 namespace Ops {
@@ -8,10 +9,17 @@ namespace Ops {
 const SplitEdgesResult SplitEdges(
     Core::Mesh* m, const std::vector<Core::Edge*>& edges, unsigned cuts, const std::vector<float>& ratios) {
     if((std::size_t)cuts + 1 != ratios.size()) {
-        // todo: throw exception here
+        throw std::invalid_argument("Invalid number of ratios given");
     }
 
     // todo: check that the sum of all ratios == 1
+    float sum = 0;
+    for(float ratio : ratios) {
+        sum += ratio;
+    }
+    if(sum < 0.999 || sum > 1.001) {
+        throw std::invalid_argument("ratios must add up to 1.0");
+    }
 
     std::vector<Core::Edge*> newEdges = std::vector<Core::Edge*>();
     newEdges.reserve(edges.size() * cuts);

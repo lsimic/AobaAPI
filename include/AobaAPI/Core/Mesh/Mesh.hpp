@@ -49,8 +49,8 @@ class Mesh {
     /// <summary>
     /// Transform all mesh elements using a 4x4 transformation matrix.
     /// </summary>
-    /// <param name="">4x4 transformation matrix to use.</param>k
-    void Transform(Math::Mat4);
+    /// <param name="mat">4x4 transformation matrix to use.</param>k
+    void Transform(Math::Mat4 mat);
 
     /// <summary>
     /// List of all Verts inside the mesh. Do not use this list to add new verts to the mesh, use EulerOps instead.
@@ -71,25 +71,25 @@ class Mesh {
     const std::vector<Face*> Faces() const;
 
     /// <summary>
-    ///
+    /// List of verts iun the mesh which fulfill the criteria given by the filtering function.
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered verts</returns>
+    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)> func) const;
 
     /// <summary>
-    ///
+    /// List of edges iun the mesh which fulfill the criteria given by the filtering function.
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered edges</returns>
+    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)> func) const;
 
     /// <summary>
-    ///
+    /// List of faces iun the mesh which fulfill the criteria given by the filtering function.
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Face*> Faces(std::function<bool(const Face* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered faces</returns>
+    const std::vector<Face*> Faces(std::function<bool(const Face* const)> func) const;
 };
 
 } // namespace Core

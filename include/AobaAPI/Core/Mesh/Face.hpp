@@ -17,6 +17,8 @@ class Edge;
 class Vert;
 
 class Face {
+    friend class Mesh;
+
     friend void KillFace(Face*);
     friend void KillMesh(Mesh*);
     friend void MakeFace(Loop*, Face*);
@@ -24,8 +26,6 @@ class Face {
     friend void GlueVert(Vert*, Vert*);
     friend void DissolveEdge(Edge*, Face*);
     friend void JoinMesh(Mesh*, Mesh*);
-
-    friend class Mesh;
 
   private:
     Loop* l;     // First loop in a list of loops which form the face boundary. use fNext/fPrev for traversal
@@ -84,29 +84,29 @@ class Face {
     /// <summary>
     /// List of all loops of the face. Do not use this list to modify the face, use EulerOps instead.
     /// </summary>
-    /// <returns>TODO </returns>
+    /// <returns>Ordered list of loops using this face.</returns>
     const std::vector<Loop*> Loops() const;
 
     /// <summary>
-    /// 
+    /// List of edges which form this face and fulfill the criteria given by the filtering function. 
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered edges</returns>
+    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)> func) const;
 
     /// <summary>
-    /// 
+    /// List of verts which form this face and fulfill the criteria given by the filtering function. 
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered verts</returns>
+    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)> func) const;
 
     /// <summary>
-    /// 
+    /// List of loops which form this face and fulfill the criteria given by the filtering function. 
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered loops</returns>
+    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)> func) const;
 };
 
 } // namespace Core

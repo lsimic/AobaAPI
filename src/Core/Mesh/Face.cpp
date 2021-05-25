@@ -20,7 +20,8 @@ Face::Face() {
     materialIdx = 0;
 }
 
-float Face::CalcArea() const { // TODO:
+float Face::CalcArea() const { 
+    // TODO:
     // low priority
     // possible solution is to triangulate the face, and sum the areas of all triangles.
     return 0;

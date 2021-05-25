@@ -81,30 +81,30 @@ class Vert {
     /// <summary>
     /// List of all loops which start in this vert. Do not use this list to add new loops, use EulerOps instead.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Loops using this vert</returns>
     const std::vector<Loop*> Loops() const;
 
     /// <summary>
-    ///
+    /// List of edges which are adjacent to this vert and fulfill the criteria given by the filtering function.
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered edges</returns>
+    const std::vector<Edge*> Edges(std::function<bool(const Edge* const)> func) const;
 
     /// <summary>
-    ///
+    /// List of faces which are adjacent to this vert and fulfill the criteria given by the filtering function.
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Face*> Faces(std::function<bool(const Face* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered faces</returns>
+    const std::vector<Face*> Faces(std::function<bool(const Face* const)> func) const;
 
     
     /// <summary>
-    ///
+    /// List of loops which are adjacent to this vert and fulfill the criteria given by the filtering function.
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered loops</returns>
+    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)> func) const;
 
 };
 } // namespace Core

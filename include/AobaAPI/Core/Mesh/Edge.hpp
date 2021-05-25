@@ -51,24 +51,26 @@ class Edge {
     Edge* mPrev;  // List of all edges in the mesh
 
     /// <summary>
-    /// Get the next vert in the list of edges around vert v
+    /// Get the next edge in the list of edges around vert v
     /// </summary>
-    /// <param name="v"></param>
-    /// <returns></returns>
+    /// <param name="v">vert</param>
+    /// <returns>The next edge</returns>
+    /// <exception cref="std::invalid_argument">Thrown if given vert is not used by the edge</exception>
     Edge* Next(const Vert* v) const;
 
     /// <summary>
     /// Get the previous edge in the list of edges around vert v
     /// </summary>
-    /// <param name="v"></param>
-    /// <returns></returns>
+    /// <param name="v">vert</param>
+    /// <returns>The previous edge</returns>
+    /// <exception cref="std::invalid_argument">Thrown if given vert is not used by the edge</exception>
     Edge* Prev(const Vert* v) const;
 
     /// <summary>
-    /// Calculate the local face normal (adjecent triangle or quad)
+    /// Calculate the local face normal (adjecent quad, or triangle if triangular face)
     /// </summary>
     /// <param name="loop">Loop of this edge to use for calculation.</param>
-    /// <returns></returns>
+    /// <returns>Local face normal</returns>
     Math::Vec3 CalcLocalNormal(Loop* loop) const;
 
   public:
@@ -78,12 +80,14 @@ class Edge {
     /// Calculate angle between two faces.
     /// </summary>
     /// <returns>Angle between faces.</returns>
+    /// <exception cref="std::invalid_argument">Thrown if edge does not have exactly two adjacent faces</exception>
     float CalcFaceAngle() const;
 
     /// <summary>
     /// Calculate angle between two faces, negative for concave join.
     /// </summary>
     /// <returns>Angle between faces.</returns>
+    /// <exception cref="std::invalid_argument">Thrown if edge does not have exactly two adjacent faces</exception>
     float CalcFaceAngleSigned() const;
 
     /// <summary>
@@ -97,13 +101,14 @@ class Edge {
     /// </summary>
     /// <param name="v">Any vert of this edge.</param>
     /// <returns>Other vert of this edge.</returns>
+    /// <exception cref="std::invalid_argument">Thrown if given vert is not used by the edge</exception>
     Vert* Other(const Vert* v) const;
 
     /// <summary>
     /// Check wether the edge is boundary face. Edge is boundary if it is used by only one face, and is used only once
     /// in the loop
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True if edge is boundary, otherwise false.</returns>
     bool IsBoundary() const;
 
     /// <summary>
@@ -133,11 +138,11 @@ class Edge {
     const std::vector<Face*> Faces() const;
 
     /// <summary>
-    /// 
+    /// List of faces that use this edge and fulfill the criteria given by the filtering function. 
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Face*> Faces(std::function<bool(const Face* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered adjacent faces</returns>
+    const std::vector<Face*> Faces(std::function<bool(const Face* const)> func) const;
 
     /// <summary>
     /// List of all Loops that use this edge. Do not use this list to add new Loops, use EulerOps instead.
@@ -146,11 +151,11 @@ class Edge {
     const std::vector<Loop*> Loops() const;
 
     /// <summary>
-    /// 
+    /// list of loops that use this edge and fulfill the criteria given by the filtering function. 
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered adjacent loops</returns>
+    const std::vector<Loop*> Loops(std::function<bool(const Loop* const)> func) const;
 
     /// <summary>
     /// List of all Verts of the edge. Do not use this list to change verts, use EulerOps instead.
@@ -159,22 +164,22 @@ class Edge {
     const std::vector<Vert*> Verts() const;
 
     /// <summary>
-    /// 
+    /// List of verts of this edge that fulfill the criteria given by the filtering function.
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)>) const;
+    /// <param name="func">Filtering function</param>
+    /// <returns>Filtered verts</returns>
+    const std::vector<Vert*> Verts(std::function<bool(const Vert* const)> func) const;
 
     /// <summary>
     /// V1 of this edge. Do not use this to change the verts, use EulerOps instead.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>V1</returns>
     Vert* V1() const;
     
     /// <summary>
     /// V1 of this edge. Do not use this to change the verts, use EulerOps instead.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>V2</returns>
     Vert* V2() const;
 };
 } // namespace Core

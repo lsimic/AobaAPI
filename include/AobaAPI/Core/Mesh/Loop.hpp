@@ -14,6 +14,11 @@ class Face;
 class Mesh;
 
 class Loop {
+    friend class Edge;
+    friend class Face;
+    friend class Vert;
+    friend class Mesh;
+
     friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
     friend void KillFace(Face*);
     friend void MakeFace(Loop*, Face*);
@@ -23,11 +28,6 @@ class Loop {
     friend void GlueFace(Face*, Edge*, Face*, Edge*);
     friend void DissolveEdge(Edge*, Face*);
     friend void JoinMesh(Mesh*, Mesh*);
-
-    friend class Edge;
-    friend class Face;
-    friend class Vert;
-    friend class Mesh;
 
   public:
     std::size_t index;   // index of this vert, not updated automatically, used for tools
@@ -45,8 +45,23 @@ class Loop {
 
   public:
     Loop();
+
+    /// <summary>
+    /// Vert which defines the direction of this loop.
+    /// </summary>
+    /// <returns>Vert of the loop</returns>
     Vert* LoopVert() const;
+
+    /// <summary>
+    /// Edge which forms this loop.
+    /// </summary>
+    /// <returns>Edge of the loop</returns>
     Edge* LoopEdge() const;
+
+    /// <summary>
+    /// Face which this loop forms.
+    /// </summary>
+    /// <returns>Face of the loop</returns>
     Face* LoopFace() const;
 };
 
