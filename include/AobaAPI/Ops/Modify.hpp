@@ -145,8 +145,8 @@ class MirrorResult {
 };
 
 /// <summary>
-/// Mirror the input elements around the plane specified by the given axis and center. 
-/// If a vert lies on or near the mirror plane, if specified, it will be glued onto the original vert. 
+/// Mirror the input elements around the plane specified by the given axis and center.
+/// If a vert lies on or near the mirror plane, if specified, it will be glued onto the original vert.
 /// </summary>
 /// <param name="m">Mesh on which to operate on</param>
 /// <param name="verts">Verts to mirror</param>
@@ -182,7 +182,7 @@ class SplitEdgesResult {
 };
 
 /// <summary>
-/// Split the input edges by adding 2-valence verts. The ratios of resulting edge lengths must be specified. 
+/// Split the input edges by adding 2-valence verts. The ratios of resulting edge lengths must be specified.
 /// ratios.size() = cuts+1
 /// sum(ratios) = 1
 /// </summary>
@@ -205,12 +205,43 @@ class TriangulateFacesResult {
 };
 
 /// <summary>
-/// Triangulate input faces using a simple fan triangulation. 
+/// Triangulate input faces using a simple fan triangulation.
 /// </summary>
 /// <param name="m">Mesh on which to operate on</param>
 /// <param name="faces">Faces to triangulate</param>
 /// <returns>new edges and faces</returns>
 const TriangulateFacesResult TriangulateFaces(Core::Mesh* m, const std::vector<Core::Face*>& faces);
+
+class SubdivideResult {
+  public:
+    std::vector<Core::Edge*> edges;     // new edges connecting edgeVerts to faceVerts and split origuinal edges
+    std::vector<Core::Vert*> edgeVerts; // new verts made by splitting edges
+    std::vector<Core::Vert*> faceVerts; // new verts created at face centers
+    std::vector<Core::Face*> faces;     // new faces
+};
+
+/// <summary>
+/// Subdivides input geometry one step, without applying any smoothing.
+/// Only the input faces will be subdivided, even if their entire boundary is found in input edges. 
+/// </summary>
+/// <param name="m">Mesh on which to operate on</param>
+/// <param name="edges">wire/isolated edges to subdivide</param>
+/// <param name="faces">Faces to subdivide</param>
+/// <returns>newly created edges, verts and faces</returns>
+const SubdivideResult SubdivideSimple(
+    Core::Mesh* m, const std::vector<Core::Edge*>& edges, const std::vector<Core::Face*>& faces);
+
+
+/// <summary>
+/// Subdivides input geometry one step, applying the catmull-clark smoothing argorithm. 
+/// Only the input faces will be subdivided, even if their entire boundary is found in input edges.
+/// </summary>
+/// <param name="m">Mesh on which to operate on</param>
+/// <param name="edges">wire/isolated edges to subdivide</param>
+/// <param name="faces">Faces to subdivide</param>
+/// <returns>newly created edges, verts and faces</returns>
+const SubdivideResult SubdivideSmooth(
+    Core::Mesh* m, const std::vector<Core::Edge*>& edges, const std::vector<Core::Face*>& faces);
 
 } // namespace Ops
 } // namespace Aoba

@@ -32,6 +32,8 @@ void ManifoldMakeEdge(Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf) {
     Loop* newl2 = new Loop();
     newl1->v = v2;
     newl2->v = v1;
+    newl1->m = f->m;
+    newl2->m = f->m;
 
     // add the new loops to face loops
     newl1->fPrev = loop2->fPrev;

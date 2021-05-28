@@ -13,5 +13,7 @@ target_sources(
 	${CMAKE_CURRENT_SOURCE_DIR}/RecalculateFaceNormals.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ReverseFaceOrder.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SplitEdges.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SubdivideSimple.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SubdivideSmooth.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/TriangulateFaces.cpp
 )

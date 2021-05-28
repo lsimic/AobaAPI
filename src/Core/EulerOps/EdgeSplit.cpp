@@ -20,6 +20,7 @@ void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv) {
             newv->e = e;
             // edges around e->v2 are unchanged
         } else {
+            newv->e = newe;
             // e is not the only edge around e->v1
             newe->v1Next = e->v1Next;
             newe->v1Prev = e->v1Prev;
@@ -100,6 +101,7 @@ void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv) {
             newv->e = e;
             // edges around e->v1 are unchanged
         } else {
+            newv->e = newe;
             // e is not the only edge around e->v2
             newe->v2Next = e->v2Next;
             newe->v2Prev = e->v2Prev;

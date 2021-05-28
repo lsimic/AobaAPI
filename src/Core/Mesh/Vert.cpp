@@ -119,18 +119,15 @@ bool Vert::IsWire() const {
 }
 
 const std::vector<Edge*> Vert::Edges() const {
-    // in case of self edges(e.v1 == e.v2) v1Next is equal to v2Next, and v1Prev is equal to v2Prev.
-    // no need to handle this condition separately
     std::vector<Edge*> result = std::vector<Edge*>();
     if(this->e == nullptr) {
         return result; // no adjecent edges.
     }
     Edge* currentEdge = this->e;
-    result.push_back(currentEdge);
-    while(this->e != currentEdge->Next(this)) {
-        currentEdge = currentEdge->Next(this);
+    do {
         result.push_back(currentEdge);
-    }
+        currentEdge = currentEdge->Next(this);
+    } while(this->e != currentEdge);
     return result;
 }
 
@@ -150,6 +147,7 @@ const std::vector<Face*> Vert::Faces() const {
                 if(std::find(result.begin(), result.end(), currentLoop->f) == result.end()) {
                     result.push_back(currentLoop->f);
                 }
+                currentLoop = currentLoop->eNext;
             } while(currentEdge->l != currentLoop);
         }
         currentEdge = currentEdge->Next(this);
