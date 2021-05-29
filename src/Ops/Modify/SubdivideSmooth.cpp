@@ -61,7 +61,7 @@ const SubdivideResult SubdivideSmooth(
                     for(Core::Face* f : inputFaces) {
                         res += faceCenterCoords.at(f->index);
                     }
-                    res /= (inputFaces.size() + 2);
+                    res /= (inputFaces.size() + 2.0f);
                     edgeCoords.push_back(res);
                 } else {
                     edge->flagsIntern += EDGE_BOUNDARY;
@@ -113,19 +113,19 @@ const SubdivideResult SubdivideSmooth(
         avgEdgeCenters /= 2.0f;
 
         if(boundaryCount) {
-            vertCoords.push_back(((2 * vert->co) + boundaryEdgePointsSum) / (boundaryCount + 2));
+            vertCoords.push_back(((2 * vert->co) + boundaryEdgePointsSum) / (boundaryCount + 2.0f));
         } else {
             Math::Vec3 avgFacePoints = Math::Vec3();
             auto vertFaces = vert->Faces();
             for(Core::Face* face : vertFaces) {
                 avgFacePoints += faceCenterCoords.at(face->index);
             }
-            avgFacePoints /= vertFaces.size();
-            avgEdgeCenters /= vertEdges.size(); 
+            avgFacePoints /= static_cast<float>(vertFaces.size());
+            avgEdgeCenters /= static_cast<float>(vertEdges.size()); 
 
 
             vertCoords.push_back(
-                (avgFacePoints + 2 * avgEdgeCenters + vert->co * (vertFaces.size() - 3.0f)) / vertFaces.size());
+                (avgFacePoints + 2 * avgEdgeCenters + vert->co * (vertFaces.size() - 3.0f)) / static_cast<float>(vertFaces.size()));
         }
     }
 

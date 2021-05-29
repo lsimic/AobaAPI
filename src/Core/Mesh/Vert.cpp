@@ -193,6 +193,7 @@ const std::vector<Edge*> Vert::Edges(std::function<bool(const Edge* const)> func
     return result;
 }
 
+
 const std::vector<Face*> Vert::Faces(std::function<bool(const Face* const)> func) const {
     std::vector<Face*> result = std::vector<Face*>();
     if(this->e == nullptr) {
@@ -211,6 +212,7 @@ const std::vector<Face*> Vert::Faces(std::function<bool(const Face* const)> func
                         result.push_back(currentLoop->f);
                     }
                 }
+                currentLoop = currentLoop->eNext;
             } while(currentEdge->l != currentLoop);
         }
         currentEdge = currentEdge->Next(this);
