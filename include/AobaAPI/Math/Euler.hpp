@@ -1,0 +1,4 @@
+#ifndef AOBA_MATH_EULER_HPP
+#define AOBA_MATH_EULER_HPP
+
+#endif

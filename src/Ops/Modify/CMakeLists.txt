@@ -1,0 +1,19 @@
+target_sources(
+	${PROJECT_NAME}
+	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/Delete.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Duplicate.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ExtrudeEdges.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ExtrudeFaceRegion.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ExtrudeFaces.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ExtrudeVerts.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/InsetFaces.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MakeFace.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Mirror.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RecalculateFaceNormals.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ReverseFaceOrder.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SplitEdges.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SubdivideSimple.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SubdivideSmooth.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/TriangulateFaces.cpp
+)

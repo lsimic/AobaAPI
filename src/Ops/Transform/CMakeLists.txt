@@ -1,0 +1,8 @@
+target_sources(
+	${PROJECT_NAME}
+	PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/Rotate.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Scale.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Transform.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Translate.cpp
+)
