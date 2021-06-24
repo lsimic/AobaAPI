@@ -3,5 +3,6 @@
 
 #include "Core/EulerOps.hpp"
 #include "Core/Mesh.hpp"
+#include "Core/MemPool.hpp"
 
 #endif 
