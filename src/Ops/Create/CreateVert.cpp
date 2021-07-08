@@ -6,7 +6,7 @@ namespace Aoba {
 namespace Ops {
 
 Core::Vert* CreateVert(Core::Mesh* m, const Math::Vec3 co) {
-    Core::Vert* newv = new Core::Vert();
+    Core::Vert* newv = m->vertPool.Allocate();
 
     Core::MakeVert(m, newv);
     newv->co = co;

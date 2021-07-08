@@ -18,7 +18,6 @@ const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Fac
 
     // iterate over all input faces
     for(Core::Face* face : faces) {
-        std::vector<Core::Loop*> faceLoops = std::vector<Core::Loop*>();
         std::vector<Core::Edge*> loopEdges = std::vector<Core::Edge*>();
         std::vector<Core::Vert*> loopVerts = std::vector<Core::Vert*>();
 
@@ -45,10 +44,10 @@ const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Fac
                     leftEdge = newVerticalEdges.at(v0->index);
                     v3 = newVerts.at(v0->index);
                 } else {
-                    leftEdge = new Core::Edge();
-                    v3 = new Core::Vert();
+                    leftEdge = m->edgePool.Allocate();
+                    v3 = m->vertPool.Allocate();
                     v3->co = v0->co;
-                    Core::MakeEdgeVert(v0, leftEdge, v3);
+                    Core::MakeEdgeVert(m, v0, leftEdge, v3);
                     v0->index = newVertIdx;
                     v0->flagsIntern = EXTRUDED;
                     newVerts.push_back(v3);
@@ -59,10 +58,10 @@ const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Fac
                     rightEdge = newVerticalEdges.at(v1->index);
                     v2 = newVerts.at(v1->index);
                 } else {
-                    rightEdge = new Core::Edge();
-                    v2 = new Core::Vert();
+                    rightEdge = m->edgePool.Allocate();
+                    v2 = m->vertPool.Allocate();
                     v2->co = v1->co;
-                    Core::MakeEdgeVert(v1, rightEdge, v2);
+                    Core::MakeEdgeVert(m, v1, rightEdge, v2);
                     v1->index = newVertIdx;
                     v1->flagsIntern = EXTRUDED;
                     newVerts.push_back(v2);
@@ -70,8 +69,8 @@ const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Fac
                     newVertIdx++;
                 }
                 // make an edge at the top using the new vertices of the extruded edges
-                topEdge = new Core::Edge();
-                Core::MakeEdge(v3, v2, topEdge);
+                topEdge = m->edgePool.Allocate();
+                Core::MakeEdge(m, v3, v2, topEdge);
                 newHorizontalEdges.push_back(topEdge);
                 loopEdge->index = newEdgeIdx;
                 loopEdge->flagsIntern = EXTRUDED;
@@ -81,10 +80,10 @@ const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Fac
                 std::vector<Core::Edge*> loopEdges = {loopEdge, rightEdge, topEdge, leftEdge};
                 std::vector<Core::Vert*> loopVerts = {v0, v1, v2, v3};
 
-                Core::Loop* newl = new Core::Loop();
-                Core::Face* newf = new Core::Face();
-                Core::MakeLoop(loopEdges, loopVerts, newl);
-                Core::MakeFace(newl, newf);
+                std::vector<Core::Loop*> newl = m->loopPool.Allocate(4);
+                Core::Face* newf = m->facePool.Allocate();
+                Core::MakeLoop(m, loopEdges, loopVerts, newl);
+                Core::MakeFace(m, newl.at(0), newf);
                 newVerticalFaces.push_back(newf);
             }
 
@@ -94,14 +93,12 @@ const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Fac
         }
 
         // create a new loop with MakeLoop using the loopverts and loopeedges to create the top face
-        Core::Loop* faceLoop = new Core::Loop();
-        Core::MakeLoop(loopEdges, loopVerts, faceLoop);
-        // push the new loop to the list of new loops
-        faceLoops.push_back(faceLoop);
+        std::vector<Core::Loop*> faceLoop = m->loopPool.Allocate(loopEdges.size());
+        Core::MakeLoop(m, loopEdges, loopVerts, faceLoop);
 
         // create the face using the list of new loops
-        Core::Face* newf = new Core::Face();
-        Core::MakeFace(faceLoop, newf);
+        Core::Face* newf = m->facePool.Allocate();
+        Core::MakeFace(m, faceLoop.at(0), newf);
         newHorizontalFaces.push_back(newf);
     }
 
@@ -120,7 +117,7 @@ const ExtrudeFacesResult ExtrudeFaces(Core::Mesh* m, const std::vector<Core::Fac
 
         // if specified, kill original face
         if(!keepOrig) {
-            Core::KillFace(face);
+            Core::KillFace(m, face);
         }
     }
 

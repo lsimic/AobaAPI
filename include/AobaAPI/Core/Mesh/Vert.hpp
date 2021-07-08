@@ -18,14 +18,14 @@ class Face;
 class Vert {
     friend class Mesh;
 
-    friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
-    friend void KillEdge(Edge*);
+    friend void EdgeSplit(Mesh*, Edge*, Vert*, Edge*, Vert*);
+    friend void KillEdge(Mesh*, Edge*);
     friend void KillMesh(Mesh*);
-    friend void KillVert(Vert*);
-    friend void MakeEdge(Vert*, Vert*, Edge*);
-    friend void MakeEdgeVert(Vert*, Edge*, Vert*);
+    friend void KillVert(Mesh*, Vert*);
+    friend void MakeEdge(Mesh*, Vert*, Vert*, Edge*);
+    friend void MakeEdgeVert(Mesh*, Vert*, Edge*, Vert*);
     friend void MakeVert(Mesh*, Vert*);
-    friend void GlueVert(Vert*, Vert*);
+    friend void GlueVert(Mesh*, Vert*, Vert*);
     friend void JoinMesh(Mesh*, Mesh*);
 
   public:

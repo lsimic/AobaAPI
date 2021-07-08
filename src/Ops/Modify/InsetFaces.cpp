@@ -54,9 +54,9 @@ const InsetFacesResult InsetFaces(Core::Mesh* m, const std::vector<Core::Face*>&
         // create inner verts and edges spanning to outer verts
         for(Core::Loop* loop : faceLoops) {
             edgeNoCurrent = CalcEdgeNo(face->no, loop);
-            Core::Vert* newv = new Core::Vert();
-            Core::Edge* newe = new Core::Edge();
-            Core::MakeEdgeVert(loop->LoopVert(), newe, newv);
+            Core::Vert* newv = m->vertPool.Allocate();
+            Core::Edge* newe = m->edgePool.Allocate();
+            Core::MakeEdgeVert(m, loop->LoopVert(), newe, newv);
 
             newv->co = loop->LoopVert()->co + CalcVertOffset(edgeNoPrev, edgeNoCurrent) * distance;
 
@@ -71,8 +71,8 @@ const InsetFacesResult InsetFaces(Core::Mesh* m, const std::vector<Core::Face*>&
         // create outer ring faces
         std::vector<Core::Edge*> innerEdges = std::vector<Core::Edge*>();
         for(std::size_t i = 0; i < newVerts.size() - 1; ++i) {
-            Core::Edge* newe = new Core::Edge();
-            Core::MakeEdge(newVerts.at(i), newVerts.at(i + 1), newe);
+            Core::Edge* newe = m->edgePool.Allocate();
+            Core::MakeEdge(m, newVerts.at(i), newVerts.at(i + 1), newe);
             innerEdges.push_back(newe);
             centerEdges.push_back(newe);
 
@@ -81,37 +81,38 @@ const InsetFacesResult InsetFaces(Core::Mesh* m, const std::vector<Core::Face*>&
                 faceLoops.at(i)->LoopVert(), faceLoops.at(i + 1)->LoopVert(), newVerts.at(i + 1), newVerts.at(i)};
             std::vector<Core::Edge*> fEdges = {faceLoops.at(i)->LoopEdge(), newEdges.at(i + 1), newe, newEdges.at(i)};
 
-            Core::Loop* newl = new Core::Loop();
-            Core::MakeLoop(fEdges, fVerts, newl);
-            Core::Face* newf = new Core::Face();
-            Core::MakeFace(newl, newf);
+            std::vector<Core::Loop*> fLoops = m->loopPool.Allocate(fEdges.size());
+            Core::MakeLoop(m, fEdges, fVerts, fLoops);
+            Core::Face* newf = m->facePool.Allocate();
+            Core::MakeFace(m, fLoops.at(0), newf);
             boundaryFaces.push_back(newf);
         }
+
         // final iteration
-        Core::Edge* newe = new Core::Edge();
-        Core::MakeEdge(newVerts.back(), newVerts.at(0), newe);
+        Core::Edge* newe = m->edgePool.Allocate();
+        Core::MakeEdge(m, newVerts.back(), newVerts.at(0), newe);
         innerEdges.push_back(newe);
         centerEdges.push_back(newe);
         std::vector<Core::Vert*> fVerts = {
             faceLoops.back()->LoopVert(), faceLoops.at(0)->LoopVert(), newVerts.at(0), newVerts.back()};
         std::vector<Core::Edge*> fEdges = {faceLoops.back()->LoopEdge(), newEdges.at(0), newe, newEdges.back()};
 
-        Core::Loop* newl = new Core::Loop();
-        Core::MakeLoop(fEdges, fVerts, newl);
-        Core::Face* newf = new Core::Face();
-        Core::MakeFace(newl, newf);
+        std::vector<Core::Loop*> newl = m->loopPool.Allocate(fEdges.size());
+        Core::MakeLoop(m, fEdges, fVerts, newl);
+        Core::Face* newf = m->facePool.Allocate();
+        Core::MakeFace(m, newl.at(0), newf);
         boundaryFaces.push_back(newf);
 
         // create inner face
-        newl = new Core::Loop();
-        Core::MakeLoop(innerEdges, newVerts, newl);
-        newf = new Core::Face();
-        Core::MakeFace(newl, newf);
+        newl = m->loopPool.Allocate(innerEdges.size());
+        Core::MakeLoop(m, innerEdges, newVerts, newl);
+        newf = m->facePool.Allocate();
+        Core::MakeFace(m, newl.at(0), newf);
 
         centerFaces.push_back(newf);
 
         // kill original face
-        Core::KillFace(face);
+        Core::KillFace(m, face);
     }
 
     InsetFacesResult result = InsetFacesResult();

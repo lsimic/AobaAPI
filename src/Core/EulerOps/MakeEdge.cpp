@@ -5,7 +5,7 @@
 namespace Aoba {
 namespace Core {
 
-void MakeEdge(Vert* v1, Vert* v2, Edge* newe) {
+void MakeEdge(Mesh* m, Vert* v1, Vert* v2, Edge* newe) {
     // v1 and v2 are already in the mesh
 
     if(v1 == v2) {
@@ -20,7 +20,6 @@ void MakeEdge(Vert* v1, Vert* v2, Edge* newe) {
 
     // add newe to the mesh.
     // mesh might not have any edges at this point.
-    Mesh* m = v1->m;
     if(m->edges == nullptr) {
         // empty mesh case
         m->edges = newe;

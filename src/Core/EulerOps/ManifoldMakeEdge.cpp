@@ -6,11 +6,11 @@
 namespace Aoba {
 namespace Core {
 
-void ManifoldMakeEdge(Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf) {
+void ManifoldMakeEdge(Mesh* m, Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf) {
     // TODO: check wether inputs are valid
 
     // make the edge between v1, v2
-    MakeEdge(v1, v2, newe);
+    MakeEdge(m, v1, v2, newe);
 
     // find loops with starting point in l1, l2
     Loop* loop1 = nullptr;
@@ -28,8 +28,9 @@ void ManifoldMakeEdge(Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf) {
     }
 
     // Make two new loops
-    Loop* newl1 = new Loop();
-    Loop* newl2 = new Loop();
+    std::vector<Loop*> loops = m->loopPool.Allocate(2);
+    Loop* newl1 = loops.at(0);
+    Loop* newl2 = loops.at(1);
     newl1->v = v2;
     newl2->v = v1;
     newl1->m = f->m;
@@ -71,7 +72,6 @@ void ManifoldMakeEdge(Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf) {
     }
 
     // add newf to list of faces in mesh
-    Mesh* m = f->m;
     newf->m = m;
     m->faces->mPrev->mNext = newf;
     newf->mPrev = m->faces->mPrev;

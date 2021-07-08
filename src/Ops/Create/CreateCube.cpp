@@ -7,14 +7,11 @@ namespace Ops {
 
 const CreateCubeResult CreateCube(Core::Mesh* m, float size) {
     // first create all vertices
-    std::vector<Core::Vert*> verts = std::vector<Core::Vert*>();
-    verts.reserve(8);
+    std::vector<Core::Vert*> verts = m->vertPool.Allocate(8);
 
     // add new verts, add them to mesh
-    for(int i = 0; i < 8; ++i) {
-        Core::Vert* newv = new Core::Vert();
+    for(Core::Vert* newv : verts) {
         Core::MakeVert(m, newv);
-        verts.push_back(newv);
     }
 
     // set up vert coordinates
@@ -30,76 +27,69 @@ const CreateCubeResult CreateCube(Core::Mesh* m, float size) {
     verts.at(7)->co = Math::Vec3(-halfSize, halfSize, halfSize);
 
     // create all edges
-    std::vector<Core::Edge*> edges = std::vector<Core::Edge*>();
-    edges.reserve(12);
+    std::vector<Core::Edge*> edges = m->edgePool.Allocate(12);
     for(std::size_t i = 0; i < 4; ++i) {
-        Core::Edge* newe = new Core::Edge();
+        Core::Edge* newe = edges.at(i);
         if(i == 3) {
-            Core::MakeEdge(verts.at(i), verts.at(0), newe);
+            Core::MakeEdge(m, verts.at(i), verts.at(0), newe);
         } else {
-            Core::MakeEdge(verts.at(i), verts.at(i + 1), newe);
+            Core::MakeEdge(m, verts.at(i), verts.at(i + 1), newe);
         }
-        edges.push_back(newe);
     }
     for(std::size_t i = 4; i < 8; ++i) {
-        Core::Edge* newe = new Core::Edge();
+        Core::Edge* newe = edges.at(i);
         if(i == 7) {
-            Core::MakeEdge(verts.at(i), verts.at(4), newe);
+            Core::MakeEdge(m, verts.at(i), verts.at(4), newe);
         } else {
-            Core::MakeEdge(verts.at(i), verts.at(i + 1), newe);
+            Core::MakeEdge(m, verts.at(i), verts.at(i + 1), newe);
         }
-        edges.push_back(newe);
     }
     for(std::size_t i = 0; i < 4; ++i) {
-        Core::Edge* newe = new Core::Edge();
-        Core::MakeEdge(verts.at(i), verts.at(i + 4), newe);
-        edges.push_back(newe);
+        Core::Edge* newe = edges.at(8+i);
+        Core::MakeEdge(m, verts.at(i), verts.at(i + 4), newe);
     }
 
     // create faces
-    std::vector<Core::Face*> faces = std::vector<Core::Face*>();
-    faces.reserve(6);
-    for(int i = 0; i < 6; ++i) {
-        faces.push_back(new Core::Face());
-    }
+    std::vector<Core::Face*> faces = m->facePool.Allocate(6);
+    std::vector<Core::Loop*> loops = m->loopPool.Allocate(24);
 
     // perhaps this could be done in a loop, but this works for now.
     // not the most elegant solution
-    Core::Loop* newl = new Core::Loop();
+    std::vector<Core::Loop*> faceLoops = std::vector<Core::Loop*>(loops.begin() + 0, loops.begin() + 4);
     std::vector<Core::Edge*> loopEdges = {edges.at(0), edges.at(1), edges.at(2), edges.at(3)};
     std::vector<Core::Vert*> loopVerts = {verts.at(0), verts.at(1), verts.at(2), verts.at(3)};
-    Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(newl, faces.at(0));
+    Core::MakeLoop(m, loopEdges, loopVerts, faceLoops);
+    Core::MakeFace(m, faceLoops.at(0), faces.at(0));
 
-    newl = new Core::Loop();
+    faceLoops = std::vector<Core::Loop*>(loops.begin() + 4, loops.begin() + 8);
     loopEdges = {edges.at(4), edges.at(7), edges.at(6), edges.at(5)};
     loopVerts = {verts.at(5), verts.at(4), verts.at(7), verts.at(6)};
-    Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(newl, faces.at(1));
+    Core::MakeLoop(m, loopEdges, loopVerts, faceLoops);
+    Core::MakeFace(m, faceLoops.at(0), faces.at(1));
 
-    newl = new Core::Loop();
+    faceLoops = std::vector<Core::Loop*>(loops.begin() + 8, loops.begin() + 12);
     loopEdges = {edges.at(9), edges.at(5), edges.at(10), edges.at(1)};
     loopVerts = {verts.at(1), verts.at(5), verts.at(6), verts.at(2)};
-    Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(newl, faces.at(2));
+    Core::MakeLoop(m, loopEdges, loopVerts, faceLoops);
+    Core::MakeFace(m, faceLoops.at(0), faces.at(2));
 
-    newl = new Core::Loop();
+    faceLoops = std::vector<Core::Loop*>(loops.begin() + 12, loops.begin() + 16);
     loopEdges = {edges.at(8), edges.at(3), edges.at(11), edges.at(7)};
     loopVerts = {verts.at(4), verts.at(0), verts.at(3), verts.at(7)};
-    Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(newl, faces.at(3));
+    Core::MakeLoop(m, loopEdges, loopVerts, faceLoops);
+    Core::MakeFace(m, faceLoops.at(0), faces.at(3));
 
-    newl = new Core::Loop();
+    faceLoops = std::vector<Core::Loop*>(loops.begin() + 16, loops.begin() + 20);
     loopEdges = {edges.at(10), edges.at(6), edges.at(11), edges.at(2)};
     loopVerts = {verts.at(2), verts.at(6), verts.at(7), verts.at(3)};
-    Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(newl, faces.at(4));
+    Core::MakeLoop(m, loopEdges, loopVerts, faceLoops);
+    Core::MakeFace(m, faceLoops.at(0), faces.at(4));
 
-    newl = new Core::Loop();
+    faceLoops = std::vector<Core::Loop*>(loops.begin() + 20, loops.begin() + 24);
     loopEdges = {edges.at(8), edges.at(4), edges.at(9), edges.at(0)};
     loopVerts = {verts.at(0), verts.at(4), verts.at(5), verts.at(1)};
-    Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(newl, faces.at(5));
+    Core::MakeLoop(m, loopEdges, loopVerts, faceLoops);
+    Core::MakeFace(m, faceLoops.at(0), faces.at(5));
 
     CreateCubeResult result = CreateCubeResult();
     result.edges = edges;

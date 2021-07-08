@@ -21,10 +21,13 @@ const SplitEdgesResult SplitEdges(
         throw std::invalid_argument("ratios must add up to 1.0");
     }
 
-    std::vector<Core::Edge*> newEdges = std::vector<Core::Edge*>();
-    newEdges.reserve(edges.size() * cuts);
-    std::vector<Core::Vert*> newVerts = std::vector<Core::Vert*>();
-    newVerts.reserve(edges.size() * cuts);
+    std::vector<Core::Edge*> newEdges = m->edgePool.Allocate(edges.size() * cuts);
+    std::vector<Core::Vert*> newVerts = m->vertPool.Allocate(edges.size() * cuts);
+    std::size_t newIdx = 0;
+
+    // reserve some space for loops
+    // assuming that all edges are contigous, manifold, non-wire
+    m->loopPool.Reserve(edges.size() * cuts * 2);
 
     for(Core::Edge* edge : edges) {
         Math::Vec3 dist = edge->V2()->co - edge->V1()->co;
@@ -32,13 +35,11 @@ const SplitEdgesResult SplitEdges(
         float ratioSum = 0;
         for(unsigned i = 0; i < cuts; ++i) {
             ratioSum += ratios.at(i);
-            Core::Edge* newe = new Core::Edge();
-            Core::Vert* newv = new Core::Vert();
+            Core::Edge* newe = newEdges.at(newIdx);
+            Core::Vert* newv = newVerts.at(newIdx);
             newv->co = edge->V1()->co + (ratioSum * dist);
-            Core::EdgeSplit(edgeToSplit, edgeToSplit->Verts().at(1), newe, newv);
+            Core::EdgeSplit(m, edgeToSplit, edgeToSplit->Verts().at(1), newe, newv);
             edgeToSplit = newe;
-            newEdges.push_back(newe);
-            newVerts.push_back(newv);
         }
     }
 

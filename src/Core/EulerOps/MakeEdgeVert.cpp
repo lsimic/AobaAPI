@@ -4,12 +4,11 @@
 namespace Aoba {
 namespace Core {
 
-void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv) {
+void MakeEdgeVert(Mesh* m, Vert* v, Edge* newe, Vert* newv) {
     // v is already in the mesh
 
     // add newv to the mesh.
     // no need to check for nullptr since v is already in the mesh.
-    Mesh* m = v->m;
     newv->m = m;
     m->verts->mPrev->mNext = newv;
     newv->mPrev = m->verts->mPrev;

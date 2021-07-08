@@ -20,11 +20,11 @@ const SubdivideResult SubdivideSimple(
     for(Core::Face* face : faces) {
         for(Core::Edge* edge : face->Edges()) {
             if(edge->flagsIntern == 0) {
-                Core::Vert* newv = new Core::Vert();
-                Core::Edge* newe = new Core::Edge();
+                Core::Vert* newv = m->vertPool.Allocate();
+                Core::Edge* newe = m->edgePool.Allocate();
                 newv->co = (edge->V1()->co + edge->V2()->co) / 2;
 
-                Core::EdgeSplit(edge, edge->V1(), newe, newv);
+                Core::EdgeSplit(m, edge, edge->V1(), newe, newv);
                 newv->flagsIntern = VERT_NEW;
                 newe->flagsIntern = EDGE_NEW;
                 edge->flagsIntern = EDGE_SPLIT;
@@ -39,11 +39,11 @@ const SubdivideResult SubdivideSimple(
     // subdivide other input edges
     for(Core::Edge* edge : edges) {
         if(!(edge->flagsIntern & EDGE_SPLIT)) {
-            Core::Vert* newv = new Core::Vert();
-            Core::Edge* newe = new Core::Edge();
+            Core::Vert* newv = m->vertPool.Allocate();
+            Core::Edge* newe = m->edgePool.Allocate();
             newv->co = (edge->V1()->co + edge->V2()->co) / 2;
 
-            Core::EdgeSplit(edge, edge->V1(), newe, newv);
+            Core::EdgeSplit(m, edge, edge->V1(), newe, newv);
             // no need to set tags here, as this is not used by subdivided faces
 
             result.edges.push_back(newe);
@@ -71,13 +71,13 @@ const SubdivideResult SubdivideSimple(
         center = center / static_cast<float>(oldVerts.size());
 
         // initial face split:
-        Core::Edge* newe = new Core::Edge();
-        Core::Face* newf = new Core::Face();
-        Core::ManifoldMakeEdge(verts.at(0), verts.at(1), face, newe, newf);
+        Core::Edge* newe = m->edgePool.Allocate();
+        Core::Face* newf = m->facePool.Allocate();
+        Core::ManifoldMakeEdge(m, verts.at(0), verts.at(1), face, newe, newf);
 
-        Core::Edge* split = new Core::Edge();
-        Core::Vert* centerVert = new Core::Vert();
-        Core::EdgeSplit(newe, verts.at(0), split, centerVert);
+        Core::Edge* split = m->edgePool.Allocate();
+        Core::Vert* centerVert = m->vertPool.Allocate();
+        Core::EdgeSplit(m, newe, verts.at(0), split, centerVert);
         centerVert->co = center;
 
         result.edges.push_back(newe);
@@ -93,11 +93,11 @@ const SubdivideResult SubdivideSimple(
         }
 
         for(std::size_t idx = 2; idx < verts.size(); ++idx) {
-            Core::Edge* newSplit = new Core::Edge();
-            Core::Face* newFace = new Core::Face();
+            Core::Edge* newSplit = m->edgePool.Allocate();
+            Core::Face* newFace = m->facePool.Allocate();
             result.faces.push_back(newFace);
             result.edges.push_back(newSplit);
-            Core::ManifoldMakeEdge(centerVert, verts.at(idx), faceToSplit, newSplit, newFace);
+            Core::ManifoldMakeEdge(m, centerVert, verts.at(idx), faceToSplit, newSplit, newFace);
             if(newFace->Loops().size() > 4) {
                 faceToSplit = newFace;
             }

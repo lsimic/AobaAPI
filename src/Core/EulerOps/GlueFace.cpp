@@ -6,7 +6,7 @@
 namespace Aoba {
 namespace Core {
 
-void GlueFace(Face* f1, Edge* e1, Face* f2, Edge* e2) {
+void GlueFace(Mesh* m, Face* f1, Edge* e1, Face* f2, Edge* e2) {
     // GlueFace is implemented using the GlueVert operator
     // certain optimization could be performed, ragarding joining faces at the last step or joining loop edges
 
@@ -101,7 +101,7 @@ void GlueFace(Face* f1, Edge* e1, Face* f2, Edge* e2) {
     
     // all inputs are valid, glue verts one by one using loops to iterate
     for(std::size_t i = 0; i < f1Loops.size(); ++i) {
-        GlueVert(f1Loops.at(i)->v, f2Loops.at(i)->v);
+        GlueVert(m, f1Loops.at(i)->v, f2Loops.at(i)->v);
     }
     // faces, edges, verts are killdy by the gluevert operator, nothing to do here
     return;

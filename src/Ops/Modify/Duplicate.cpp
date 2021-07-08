@@ -13,7 +13,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
     int vertIdx = 0;
 
     for(int i = 0; i < verts.size(); ++i) {
-        Core::Vert* newv = new Core::Vert();
+        Core::Vert* newv = m->vertPool.Allocate();
         Core::MakeVert(m, newv);
 
         newv->co = verts.at(i)->co;
@@ -31,7 +31,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
     int edgeIdx = 0;
 
     for(int i = 0; i < edges.size(); ++i) {
-        Core::Edge* newe = new Core::Edge();
+        Core::Edge* newe = m->edgePool.Allocate();
         Core::Edge* current = edges.at(i);
         current->index = edgeIdx;
         current->flagsIntern = COPIED;
@@ -43,7 +43,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
         if(current->Verts().at(0)->flagsIntern & COPIED) {
             v1 = newVerts.at(current->Verts().at(0)->index);
         } else {
-            v1 = new Core::Vert();
+            v1 = m->vertPool.Allocate();
             Core::MakeVert(m, v1);
 
             v1->co = current->Verts().at(0)->co;
@@ -57,7 +57,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
         if(current->Verts().at(1)->flagsIntern & COPIED) {
             v2 = newVerts.at(current->Verts().at(1)->index);
         } else {
-            v2 = new Core::Vert();
+            v2 = m->vertPool.Allocate();
             Core::MakeVert(m, v2);
 
             v2->co = current->Verts().at(1)->co;
@@ -68,7 +68,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
             newVerts.push_back(v2);
         }
 
-        Core::MakeEdge(v1, v2, newe);
+        Core::MakeEdge(m, v1, v2, newe);
         newEdges.push_back(newe);
     }
 
@@ -77,7 +77,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
     newFaces.reserve(edges.size());
 
     for(int i = 0; i < faces.size(); ++i) {
-        Core::Face* newf = new Core::Face();
+        Core::Face* newf = m->facePool.Allocate();
 
         std::vector<Core::Loop*> newFaceLoops = std::vector<Core::Loop*>();
 
@@ -90,7 +90,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
             if(loops.at(k)->LoopVert()->flagsIntern & COPIED) {
                 loopVerts.push_back(newVerts.at(loops.at(k)->LoopVert()->index));
             } else {
-                Core::Vert* newv = new Core::Vert();
+                Core::Vert* newv = m->vertPool.Allocate();
                 Core::MakeVert(m, newv);
 
                 newv->co = loops.at(k)->LoopVert()->co;
@@ -105,7 +105,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
             if(loops.at(k)->LoopEdge()->flagsIntern & COPIED) {
                 loopEdges.push_back(newEdges.at(loops.at(k)->LoopEdge()->index));
             } else {
-                Core::Edge* newe = new Core::Edge();
+                Core::Edge* newe = m->edgePool.Allocate();
                 Core::Edge* current = loops.at(k)->LoopEdge();
                 current->index = edgeIdx;
                 current->flagsIntern = COPIED;
@@ -117,7 +117,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
                 if(current->Verts().at(0)->flagsIntern & COPIED) {
                     v1 = newVerts.at(current->Verts().at(0)->index);
                 } else {
-                    v1 = new Core::Vert();
+                    v1 = m->vertPool.Allocate();
                     Core::MakeVert(m, v1);
 
                     v1->co = current->Verts().at(0)->co;
@@ -131,7 +131,7 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
                 if(current->Verts().at(1)->flagsIntern & COPIED) {
                     v2 = newVerts.at(current->Verts().at(1)->index);
                 } else {
-                    v2 = new Core::Vert();
+                    v2 = m->vertPool.Allocate();
                     Core::MakeVert(m, v2);
 
                     v2->co = current->Verts().at(1)->co;
@@ -142,16 +142,16 @@ const DuplicateResult Duplicate(Core::Mesh* m, const std::vector<Core::Vert*>& v
                     newVerts.push_back(v2);
                 }
 
-                Core::MakeEdge(v1, v2, newe);
+                Core::MakeEdge(m, v1, v2, newe);
                 newEdges.push_back(newe);
                 loopEdges.push_back(newe);
             }
         }
 
-        Core::Loop* newl = new Core::Loop();
-        Core::MakeLoop(loopEdges, loopVerts, newl);
+        std::vector<Core::Loop*> newl = m->loopPool.Allocate(loopEdges.size());
+        Core::MakeLoop(m, loopEdges, loopVerts, newl);
 
-        Core::MakeFace(newl, newf);
+        Core::MakeFace(m, newl.at(0), newf);
         newFaces.push_back(newf);
     }
 

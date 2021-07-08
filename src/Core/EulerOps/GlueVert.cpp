@@ -6,7 +6,7 @@
 namespace Aoba {
 namespace Core {
 
-void deleteMergeableFaces(Edge* v1e1, Edge* v1e2, Edge* v2e1, Edge* v2e2) {
+void deleteMergeableFaces(Mesh* m, Edge* v1e1, Edge* v1e2, Edge* v2e1, Edge* v2e2) {
     // check if v1e1, v1e2 share a face
     std::vector<Face*> facesv1 = std::vector<Face*>();
     for(Face* fe1 : v1e1->Faces()) {
@@ -62,13 +62,13 @@ void deleteMergeableFaces(Edge* v1e1, Edge* v1e2, Edge* v2e1, Edge* v2e2) {
     }
 
     for(Face* f : facesToKill) {
-        KillFace(f);
+        KillFace(m, f);
     }
 }
 
 // this code is... interesting
 // several parts are rather costly, and some checks could be separated, at the cost of safety
-void GlueVert(Vert* v1, Vert* v2) {
+void GlueVert(Mesh* m, Vert* v1, Vert* v2) {
     std::vector<Edge*> v1Edges = v1->Edges();
     std::vector<Edge*> v2Edges = v2->Edges();
 
@@ -101,9 +101,9 @@ void GlueVert(Vert* v1, Vert* v2) {
         if(found != nullptr) {
             // v1 and v2 are used in the same face
             // split the face using manifoldMakeEdge
-            Edge* newe = new Edge();
-            Face* newf = new Face();
-            ManifoldMakeEdge(v1, v2, found, newe, newf);
+            Edge* newe = m->edgePool.Allocate();
+            Face* newf = m->facePool.Allocate();
+            ManifoldMakeEdge(m, v1, v2, found, newe, newf);
             common = newe;
         }
     }
@@ -144,7 +144,7 @@ void GlueVert(Vert* v1, Vert* v2) {
     if(v1PairEdges.size() > 1) {
         for(int i = 0; i < v1PairEdges.size() - 1; ++i) {
             for(int j = i + 1; j < v1PairEdges.size(); ++j) {
-                deleteMergeableFaces(v1PairEdges.at(i), v1PairEdges.at(j), v2PairEdges.at(i), v2PairEdges.at(j));
+                deleteMergeableFaces(m, v1PairEdges.at(i), v1PairEdges.at(j), v2PairEdges.at(i), v2PairEdges.at(j));
             }
         }
     }
@@ -158,7 +158,7 @@ void GlueVert(Vert* v1, Vert* v2) {
                 // if face has 3 loops, this means that it's a triangle
                 // therefore, it's edges are already inside pairEdges lists.
                 // kill the face.
-                KillFace(face);
+                KillFace(m, face);
             } else {
                 // face has 4 or more loops, therefore, it will remain
                 // find the loop which uses this edge and remove it from face list via fNext, fPrev
@@ -180,7 +180,7 @@ void GlueVert(Vert* v1, Vert* v2) {
                             loop->ePrev->eNext = loop->eNext;
                             loop->eNext->ePrev = loop->ePrev;
                         }
-                        delete loop;
+                        m->loopPool.Free(loop);
                         break;
                     }
                 }
@@ -188,7 +188,7 @@ void GlueVert(Vert* v1, Vert* v2) {
         }
         // at this point, nothing should reference the common edge, kill it.
         // this will remove it from v1, v2 lists.
-        KillEdge(common);
+        KillEdge(m, common);
     }
 
     // for edges without a pair which will not be merged,
@@ -327,7 +327,7 @@ void GlueVert(Vert* v1, Vert* v2) {
                 edge->m->edges = edge->mNext;
             }
         }
-        delete edge;
+        m->edgePool.Free(edge);
     }
 
     // remove v2 from mesh list of verts
@@ -337,7 +337,7 @@ void GlueVert(Vert* v1, Vert* v2) {
     if(v2->m->verts == v2) {
         v2->m->verts = v2->mNext;
     }
-    delete v2;
+    m->vertPool.Free(v2);
 
     return;
 }

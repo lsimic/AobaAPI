@@ -11,7 +11,7 @@ void KillMesh(Mesh* m) {
     if(m->faces != nullptr) {
         std::vector<Face*> faces = m->Faces();
         for(Face* f : faces) {
-            KillFace(f);
+            KillFace(m, f);
         }
     }
 
@@ -19,7 +19,7 @@ void KillMesh(Mesh* m) {
     if(m->edges != nullptr) {
         std::vector<Edge*> edges = m->Edges();
         for(Edge* e : edges) {
-            KillEdge(e);
+            KillEdge(m, e);
         }
     }
 
@@ -27,7 +27,7 @@ void KillMesh(Mesh* m) {
     if(m->verts != nullptr) {
         std::vector<Vert*> verts = m->Verts();
         for(Vert* v : verts) {
-            KillVert(v);
+            KillVert(m, v);
         }
     }
 

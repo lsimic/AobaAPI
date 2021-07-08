@@ -8,27 +8,33 @@ const ExtrudeEdgesResult ExtrudeEdges(Core::Mesh* m, const std::vector<Core::Edg
 
     ExtrudeEdgesResult result = ExtrudeEdgesResult();
 
+    std::vector<Core::Edge*> horizontalEdges = m->edgePool.Allocate(edges.size());
+    std::vector<Core::Face*> faces = m->facePool.Allocate(edges.size());
+    std::vector<Core::Loop*> loops = m->loopPool.Allocate(edges.size() * 4);
+
+    // not exact cause some verts might be shared, and some not
+    // new verts and vertical edges are allocated one by one
+    // might incur a slight performance hit
+    std::vector<Core::Vert*> verts = std::vector<Core::Vert*>();
+    verts.reserve(edges.size()); 
+    m->vertPool.Reserve(edges.size());
+
     std::vector<Core::Edge*> verticalEdges = std::vector<Core::Edge*>();
     verticalEdges.reserve(edges.size());
-    std::vector<Core::Edge*> horizontalEdges = std::vector<Core::Edge*>();
-    horizontalEdges.reserve(edges.size());
-    std::vector<Core::Vert*> verts = std::vector<Core::Vert*>();
-    verts.reserve(edges.size()); // not exact cause some verts might be shared, and some not
-    std::vector<Core::Face*> faces = std::vector<Core::Face*>();
-    faces.reserve(edges.size());
+    m->edgePool.Reserve(edges.size());
 
     const int32_t EXTRUDED_VERT = 1 << 0;
 
     int vertIdx = 0;
-    for(int i = 0; i < edges.size(); ++i) {
+    for(std::size_t i = 0; i < edges.size(); ++i) {
         std::vector<Core::Vert*> currentVerts = edges.at(i)->Verts();
         // extrude all individual verts into vertical edges ig not already extruded
         for(int j = 0; j < 2; ++j) {
             if(!(currentVerts.at(j)->flagsIntern & EXTRUDED_VERT)) {
-                Core::Vert* newv = new Core::Vert();
-                Core::Edge* newe = new Core::Edge();
+                Core::Vert* newv = m->vertPool.Allocate();
+                Core::Edge* newe = m->edgePool.Allocate();
 
-                Core::MakeEdgeVert(currentVerts.at(j), newe, newv);
+                Core::MakeEdgeVert(m, currentVerts.at(j), newe, newv);
                 newv->co = currentVerts.at(j)->co;
 
                 // set flags and index on the vert.
@@ -43,9 +49,8 @@ const ExtrudeEdgesResult ExtrudeEdges(Core::Mesh* m, const std::vector<Core::Edg
         }
 
         // create the horizontal edge, accessing the new verts by index stored on existing verts of the current edge.
-        Core::Edge* newe = new Core::Edge();
-        Core::MakeEdge(verts.at(currentVerts.at(0)->index), verts.at(currentVerts.at(1)->index), newe);
-        horizontalEdges.push_back(newe);
+        Core::Edge* newe = horizontalEdges.at(i);
+        Core::MakeEdge(m, verts.at(currentVerts.at(0)->index), verts.at(currentVerts.at(1)->index), newe);
 
         // find edges and verts which form the face boundary, keeping in mind existing loops
         // try to avoid discontinued normals
@@ -63,15 +68,15 @@ const ExtrudeEdgesResult ExtrudeEdges(Core::Mesh* m, const std::vector<Core::Edg
         std::vector<Core::Vert*> faceVerts = {first, loopVert, verts.at(loopVert->index), verts.at(first->index)};
         
         // create the new face
-        Core::Face* newf = new Core::Face();
-        Core::Loop* newl = new Core::Loop();
-        Core::MakeLoop(faceEdges, faceVerts, newl);
-        Core::MakeFace(newl, newf);
-        faces.push_back(newf);
+        Core::Face* newf = faces.at(i);
+        std::vector<Core::Loop*> faceLoops =
+            std::vector<Core::Loop*>(loops.begin() + (4 * i), loops.begin() + (4 * i + 4)); 
+        Core::MakeLoop(m, faceEdges, faceVerts, faceLoops);
+        Core::MakeFace(m, faceLoops.at(0), newf);
     }
 
     // clear flags and index from verts
-    for(int i = 0; i < edges.size(); ++i) {
+    for(std::size_t i = 0; i < edges.size(); ++i) {
         std::vector<Core::Vert*> currentVerts = edges.at(i)->Verts();
         for(int j = 0; j < 2; ++j) {
             currentVerts.at(j)->index = 0;

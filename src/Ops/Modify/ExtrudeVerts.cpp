@@ -9,19 +9,14 @@ const ExtrudeVertsResult ExtrudeVerts(Core::Mesh* m, const std::vector<Core::Ver
 
     ExtrudeVertsResult result = ExtrudeVertsResult();
 
-    std::vector<Core::Vert*> newVerts = std::vector<Core::Vert*>();
-    newVerts.reserve(verts.size());
+    std::vector<Core::Vert*> newVerts = m->vertPool.Allocate(verts.size());
+    std::vector<Core::Edge*> newEdges = m->edgePool.Allocate(verts.size());
 
-    std::vector<Core::Edge*> newEdges = std::vector<Core::Edge*>();
-    newEdges.reserve(verts.size());
-
-    for(Core::Vert* v : verts) {
-        Core::Vert* newv = new Core::Vert();
-        newv->co = v->co;
-        Core::Edge* newe = new Core::Edge();
-        Core::MakeEdgeVert(v, newe, newv);
-        newVerts.push_back(newv);
-        newEdges.push_back(newe);
+    for(std::size_t i = 0; i < verts.size(); ++i) {
+        Core::Vert* newv = newVerts.at(i);
+        newv->co = verts.at(i)->co;
+        Core::Edge* newe = newEdges.at(i);
+        Core::MakeEdgeVert(m, verts.at(i), newe, newv);
     }
 
     result.verts = newVerts;

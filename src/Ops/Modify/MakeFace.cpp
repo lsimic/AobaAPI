@@ -78,10 +78,10 @@ Core::Face* MakeFace(Core::Mesh* m, std::vector<Core::Edge*> edges) {
         throw std::invalid_argument("Duplicate verts found");
     }
 
-    Core::Face* newf = new Core::Face();
-    Core::Loop* newl = new Core::Loop();
-    Core::MakeLoop(loopEdges, loopVerts, newl);
-    Core::MakeFace(newl, newf);
+    Core::Face* newf = m->facePool.Allocate();
+    std::vector<Core::Loop*> loops = m->loopPool.Allocate(loopEdges.size());
+    Core::MakeLoop(m, loopEdges, loopVerts, loops);
+    Core::MakeFace(m, loops.at(0), newf);
     return newf;
 }
 

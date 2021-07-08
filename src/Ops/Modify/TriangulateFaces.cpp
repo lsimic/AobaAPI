@@ -22,9 +22,9 @@ const TriangulateFacesResult TriangulateFaces(Core::Mesh* m, const std::vector<C
                 // split face using manifoldMakeEdge
                 Core::Vert* v1 = current->Loops().at(0)->LoopVert();
                 Core::Vert* v2 = current->Loops().at(2)->LoopVert();
-                Core::Edge* newe = new Core::Edge();
-                Core::Face* newf = new Core::Face();
-                Core::ManifoldMakeEdge(v1, v2, current, newe, newf);
+                Core::Edge* newe = m->edgePool.Allocate();
+                Core::Face* newf = m->facePool.Allocate();
+                Core::ManifoldMakeEdge(m, v1, v2, current, newe, newf);
                 newEdges.push_back(newe);
 
                 if(current->Loops().size() > 3) {

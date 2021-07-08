@@ -8,27 +8,25 @@
 namespace Aoba {
 namespace Core {
 
+// TODO: a "reserve" method could be usefull,
+// it would reserve the memory required, without givinf it to specific element
+
 template<typename T>
 class MemPool {
-    std::vector<MemPoolChunk<T>> chunks;
+    std::vector<MemPoolChunk<T>*> chunks;
 
   public:
     MemPool();
 
-    ~MemPool();
+    T* Allocate();
 
-    T* AllocateSingle();
+    std::vector<T*> Allocate(std::size_t count);
 
-    std::vector<T*> AllocateMany(std::size_t count);
+    void Free(T*);
 
-    std::vector<T*> AllocateContinous(std::size_t count);
+    void Free(std::vector<T*> data);
 
-    void FreeSingle(T*);
-
-    void FreeMany(std::vector<T*> data);
-
-    bool HasChunks();
-
+    void Reserve(std::size_t count);
 };
 
 } // namespace Core

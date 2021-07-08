@@ -6,9 +6,7 @@
 namespace Aoba {
 namespace Core {
 
-void MakeFace(Loop* loop, Face* newf) {
-    Mesh* m = loop->m;
-
+void MakeFace(Mesh* m, Loop* loop, Face* newf) {
     // set the first loop of the face
     newf->l = loop;
     Loop* current = loop;

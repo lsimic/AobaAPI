@@ -19,14 +19,15 @@ class Loop {
     friend class Vert;
     friend class Mesh;
 
-    friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
-    friend void KillFace(Face*);
-    friend void MakeFace(Loop*, Face*);
-    friend void MakeLoop(std::vector<Edge*>, std::vector<Vert*>, Loop*);
-    friend void GlueVert(Vert*, Vert*);
-    friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
-    friend void GlueFace(Face*, Edge*, Face*, Edge*);
-    friend void DissolveEdge(Edge*, Face*);
+    friend void EdgeSplit(Mesh*, Edge*, Vert*, Edge*, Vert*);
+    friend void KillFace(Mesh*, Face*);
+    friend void MakeFace(Mesh*, Loop*, Face*);
+    friend void MakeLoop(Mesh*, std::vector<Edge*>, std::vector<Vert*>, Loop*);
+    friend void MakeLoop(Mesh*, std::vector<Edge*>, std::vector<Vert*>, std::vector<Loop*>);
+    friend void GlueVert(Mesh*, Vert*, Vert*);
+    friend void ManifoldMakeEdge(Mesh*, Vert*, Vert*, Face*, Edge*, Face*);
+    friend void GlueFace(Mesh*, Face*, Edge*, Face*, Edge*);
+    friend void DissolveEdge(Mesh*, Edge*, Face*);
     friend void JoinMesh(Mesh*, Mesh*);
 
   public:

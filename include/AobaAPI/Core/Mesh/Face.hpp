@@ -19,12 +19,12 @@ class Vert;
 class Face {
     friend class Mesh;
 
-    friend void KillFace(Face*);
+    friend void KillFace(Mesh*, Face*);
     friend void KillMesh(Mesh*);
-    friend void MakeFace(Loop*, Face*);
-    friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
-    friend void GlueVert(Vert*, Vert*);
-    friend void DissolveEdge(Edge*, Face*);
+    friend void MakeFace(Mesh*, Loop*, Face*);
+    friend void ManifoldMakeEdge(Mesh*, Vert*, Vert*, Face*, Edge*, Face*);
+    friend void GlueVert(Mesh*, Vert*, Vert*);
+    friend void DissolveEdge(Mesh*, Edge*, Face*);
     friend void JoinMesh(Mesh*, Mesh*);
 
   private:

@@ -6,7 +6,7 @@
 namespace Aoba {
 namespace Core {
 
-void DissolveEdge(Edge* e, Face* fSurvivor) {
+void DissolveEdge(Mesh* m, Edge* e, Face* fSurvivor) {
     // check if the edge is dissolvable
     // edge is not dissolvable if
     // 1. it is not manifold
@@ -62,10 +62,10 @@ void DissolveEdge(Edge* e, Face* fSurvivor) {
 
     // kill the dissolved edge
     e->l = nullptr;
-    KillEdge(e);
+    KillEdge(m, e);
     // delete unused face loops.
-    delete otherLoop;
-    delete survLoop;
+    m->loopPool.Free(otherLoop);
+    m->loopPool.Free(survLoop);
 
     // delete the other face
     other->mPrev->mNext = other->mNext;
@@ -73,7 +73,7 @@ void DissolveEdge(Edge* e, Face* fSurvivor) {
     if(other->m->faces == other) {
         other->m->faces = other->mNext;
     }
-    delete other;
+    m->facePool.Free(other);
 
     return;
 }

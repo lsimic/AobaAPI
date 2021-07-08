@@ -60,7 +60,7 @@ void Delete(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const std::vec
             }
         }
         // kill the face, keeping its edges and verts alive (for now)
-        KillFace(f);
+        KillFace(m, f);
     }
 
     if(mode == DeleteMode::FacesOnly) {
@@ -88,7 +88,7 @@ void Delete(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const std::vec
         }
 
         // kill the edge, keeping its verts alive(for now), but killing all adjecent faces
-        KillEdge(e);
+        KillEdge(m, e);
     }
 
     if(mode != DeleteMode::All) {
@@ -105,7 +105,7 @@ void Delete(Core::Mesh* m, const std::vector<Core::Vert*>& verts, const std::vec
     // kill all verts marked for deletion(either directly or implicit through edges/faces)
     // this will kill other faces and edges as necessary.
     for(Core::Vert* v : vertsToDelete) {
-        KillVert(v);
+        KillVert(m, v);
     }
 }
 

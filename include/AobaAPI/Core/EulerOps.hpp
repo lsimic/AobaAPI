@@ -24,7 +24,7 @@ class Loop;
 /// Thrown if edge e does not have exactly two adjacent faces.
 /// Thrown if edge e is not the only edge shared by it's faces.
 /// </exception>
-void DissolveEdge(Edge* e, Face* fSurvivor);
+void DissolveEdge(Mesh* m, Edge* e, Face* fSurvivor);
 
 // TODO: should also make a DissolveVert operator, but i'm not sure about the behaviour
 // what happens if Vert is used by three or more wire edges?
@@ -38,7 +38,7 @@ void DissolveEdge(Edge* e, Face* fSurvivor);
 /// <param name="v">Vert of the edge e which will be found on the new edge</param>
 /// <param name="newe">New edge which will be placed between v and newv</param>
 /// <param name="newv">New vert which will be placed between e and newe</param>
-void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv);
+void EdgeSplit(Mesh* m, Edge* e, Vert* v, Edge* newe, Vert* newv);
 
 /// <summary>
 /// Squeezes the ends of the specified edge e together, deleting the edge and a vertex while preserving adjecencies.
@@ -51,7 +51,7 @@ void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv);
 /// </remarks>
 /// <param name="e">Edge which will be squeezed</param>
 /// <param name="vSurvivor">The surviving vertex</param>
-void EdgeSqueeze(Edge* e, Vert* vSurvivor);
+void EdgeSqueeze(Mesh* m, Edge* e, Vert* vSurvivor);
 
 /// <summary>
 /// Merges the Edge e1 together with the Edge e2 preserving the adhecencies of elements. The Edge e1 is the
@@ -65,7 +65,7 @@ void EdgeSqueeze(Edge* e, Vert* vSurvivor);
 /// </remarks>
 /// <param name="e1">First edge to glue, surviving edge</param>
 /// <param name="e2">Other edge to glue</param>
-void GlueEdge(Edge* e1, Edge* e2);
+void GlueEdge(Mesh* m, Edge* e1, Edge* e2);
 
 /// <summary>
 /// Merges the single loop faces f1 and f2 together, preserving the adjecencies of elements. e1 and e22 specify exactly
@@ -87,7 +87,7 @@ void GlueEdge(Edge* e1, Edge* e2);
 /// Thrown if edge e1 and/or e2 do not belong to faces f1 and/or f2.
 /// Thrown if the face loops do not match the specified orientation.
 /// </exception>
-void GlueFace(Face* f1, Edge* e1, Face* f2, Edge* e2);
+void GlueFace(Mesh* m, Face* f1, Edge* e1, Face* f2, Edge* e2);
 
 /// <summary>
 /// Merges the vertices of v1 and v2 together, preserving the adjecencies of elements, the Vert of v1 is the
@@ -96,21 +96,21 @@ void GlueFace(Face* f1, Edge* e1, Face* f2, Edge* e2);
 /// </summary>
 /// <param name="v1">The surviving vert</param>
 /// <param name="v2">The other vert</param>
-void GlueVert(Vert* v1, Vert* v2);
+void GlueVert(Mesh* m, Vert* v1, Vert* v2);
 
 /// <summary>
 /// Deletes the Edge e and Kills any faces which are adjecent to it.
 /// This is NOT equivalent to calling ~Edge()!
 /// </summary>
 /// <param name="e">Edge to be killed</param>
-void KillEdge(Edge* e);
+void KillEdge(Mesh* m, Edge* e);
 
 /// <summary>
 /// Deletes the face f and all loops associated with it. It does not delete any edges or vertices.
 /// This is NOT equivalent to calling ~Face()!
 /// </summary>
 /// <param name="f">Face to be killed</param>
-void KillFace(Face* f);
+void KillFace(Mesh* m, Face* f);
 
 /// <summary>
 /// Deletes all elements present in its mesh, returning it to an empty state.
@@ -124,7 +124,7 @@ void KillMesh(Mesh* m);
 /// This is NOT equivalent to calling ~Vert()!
 /// </summary>
 /// <param name="v">Vert to bi killed</param>
-void KillVert(Vert* v);
+void KillVert(Mesh* m, Vert* v);
 
 /// <summary>
 /// Creates a new wire edge, newe, between the specified vertices v1 and v2.
@@ -136,7 +136,7 @@ void KillVert(Vert* v);
 /// Thrown if vert v1 is equal to vert v2.
 /// Thrown if an edge already exists between the given verts.
 /// </exception>
-void MakeEdge(Vert* v1, Vert* v2, Edge* newe);
+void MakeEdge(Mesh* m, Vert* v1, Vert* v2, Edge* newe);
 
 /// <summary>
 /// Creates a new wire edge newe which connects vert v with a new vert newv.
@@ -144,7 +144,7 @@ void MakeEdge(Vert* v1, Vert* v2, Edge* newe);
 /// <param name="v">Existing vert</param>
 /// <param name="newe">The new vert</param>
 /// <param name="newv">The new edge</param>
-void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv);
+void MakeEdgeVert(Mesh* m, Vert* v, Edge* newe, Vert* newv);
 
 /// <summary>
 /// Checks wether the provided edges and verts form a valid loop. 
@@ -156,7 +156,7 @@ void MakeEdgeVert(Vert* v, Edge* newe, Vert* newv);
 /// <param name="edges">ordered edges which form the loop.</param>
 /// <param name="verts">Ordered verts which form the loop.</param>
 /// <returns>True if loop is valid, otherwise false.</returns>
-bool ValidateLoop(std::vector<Edge*> edges, std::vector<Vert*> verts);
+bool ValidateLoop(Mesh* m, std::vector<Edge*> edges, std::vector<Vert*> verts);
 
 /// <summary>
 /// Creates a new face using the specified loops, where loop is a pointer to the first element in the loop list.
@@ -165,7 +165,7 @@ bool ValidateLoop(std::vector<Edge*> edges, std::vector<Vert*> verts);
 /// </summary>
 /// <param name="loops">Loops which form the face boundary</param>
 /// <param name="newf">The new face</param>
-void MakeFace(Loop* loop, Face* newf);
+void MakeFace(Mesh* m, Loop* loop, Face* newf);
 
 /// <summary>
 /// Creates a new loop where each orientation is specified in an ordered list of edges and verts.
@@ -176,7 +176,18 @@ void MakeFace(Loop* loop, Face* newf);
 /// /// <exception cref="std::invalid_argument">
 /// Thrown if there are less than three edges or verts.
 /// </exception>
-void MakeLoop(std::vector<Edge*> edges, std::vector<Vert*> verts, Loop* newl);
+void MakeLoop(Mesh* m, std::vector<Edge*> edges, std::vector<Vert*> verts, Loop* newl);
+
+/// <summary>
+/// Creates a new loop where each orientation is specified in an ordered list of edges and verts.
+/// </summary>
+/// <param name="edges">Ordered list of edges which form a closed loop</param>
+/// <param name="verts">Ordered list of verts which form a closed loop</param>
+/// <param name="newLoops">List of new loops</param>
+/// /// <exception cref="std::invalid_argument">
+/// Thrown if there are less than three edges or verts, or the input sizes do not match
+/// </exception>
+void MakeLoop(Mesh* m, std::vector<Edge*> edges, std::vector<Vert*> verts, std::vector<Loop*> newLoops);
 
 /// <summary>
 /// Creates a new Vert newv in an existing mesh m.
@@ -198,7 +209,7 @@ void MakeVert(Mesh* m, Vert* newv);
 /// Thrown if edge v1, v2 are not found on the face boundary
 /// Thrown if an edge already exists between v1 and v2. 
 /// </exception>
-void ManifoldMakeEdge(Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf);
+void ManifoldMakeEdge(Mesh* m, Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf);
 
 /// <summary>
 /// Joins the mesh m2 into the mesh m1, deleting the mesh m2. Referecens to all elements of mesh 2 remain valid. 

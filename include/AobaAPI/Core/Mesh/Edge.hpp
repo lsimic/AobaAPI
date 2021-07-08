@@ -21,17 +21,18 @@ class Edge {
     friend class Mesh;
     friend class Face;
 
-    friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
-    friend void KillEdge(Edge*);
-    friend void KillFace(Face*);
+    friend void EdgeSplit(Mesh*, Edge*, Vert*, Edge*, Vert*);
+    friend void KillEdge(Mesh*, Edge*);
+    friend void KillFace(Mesh*, Face*);
     friend void KillMesh(Mesh*);
-    friend void MakeEdge(Vert*, Vert*, Edge*);
-    friend void MakeEdgeVert(Vert*, Edge*, Vert*);
-    friend void MakeLoop(std::vector<Edge*>, std::vector<Vert*>, Loop*);
-    friend void GlueVert(Vert*, Vert*); 
-    friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
-    friend void GlueEdge(Edge*, Edge*);
-    friend void DissolveEdge(Edge*, Face*);
+    friend void MakeEdge(Mesh*, Vert*, Vert*, Edge*);
+    friend void MakeEdgeVert(Mesh*, Vert*, Edge*, Vert*);
+    friend void MakeLoop(Mesh*, std::vector<Edge*>, std::vector<Vert*>, Loop*);
+    friend void MakeLoop(Mesh*, std::vector<Edge*>, std::vector<Vert*>, std::vector<Loop*>);
+    friend void GlueVert(Mesh*, Vert*, Vert*); 
+    friend void ManifoldMakeEdge(Mesh*, Vert*, Vert*, Face*, Edge*, Face*);
+    friend void GlueEdge(Mesh*, Edge*, Edge*);
+    friend void DissolveEdge(Mesh*, Edge*, Face*);
     friend void JoinMesh(Mesh*, Mesh*);
 
   public:

@@ -4,12 +4,12 @@
 namespace Aoba {
 namespace Core {
 
-void KillVert(Vert* v) {
+void KillVert(Mesh* m, Vert* v) {
     // Kill all edges (and faces) using this edge
     std::vector<Edge*> vertEdges = v->Edges();
     if(vertEdges.size() > 0) {
         for(auto it = vertEdges.begin(); it != vertEdges.end(); ++it) {
-            KillEdge(*it);
+            KillEdge(m, (*it));
         }
     }
 
@@ -24,7 +24,7 @@ void KillVert(Vert* v) {
         }
     }
 
-    delete v;
+    m->vertPool.Free(v);
 }
 
 } // namespace Core

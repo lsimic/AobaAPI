@@ -44,14 +44,14 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
                 // edge was not duplicated, but some verts might have been.
                 Core::Vert* v1;
                 Core::Vert* v2;
-                Core::Edge* newe = new Core::Edge();
+                Core::Edge* newe = m->edgePool.Allocate();
 
                 if(loopEdge->V1()->flagsIntern & DUPLICATED_VERT) {
                     // v1 was duplicated
                     v1 = newVerts.at(loopEdge->V1()->index);
                 } else {
                     // v1 was not duplicated, do it now
-                    v1 = new Core::Vert();
+                    v1 = m->vertPool.Allocate();
                     loopEdge->V1()->index = vertIdx;
                     loopEdge->V1()->flagsIntern = DUPLICATED_VERT;
                     ++vertIdx;
@@ -66,7 +66,7 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
                     v2 = newVerts.at(loopEdge->V2()->index);
                 } else {
                     // v1 was not duplicated, do it now
-                    v2 = new Core::Vert();
+                    v2 = m->vertPool.Allocate();
                     loopEdge->V2()->index = vertIdx;
                     loopEdge->V2()->flagsIntern = DUPLICATED_VERT;
                     ++vertIdx;
@@ -76,7 +76,7 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
                     originalVerts.push_back(loopEdge->V2());
                 }
                 // make the edge
-                Core::MakeEdge(v1, v2, newe);
+                Core::MakeEdge(m, v1, v2, newe);
                 horizontalEdges.push_back(newe);
                 loopEdge->index = edgeIdx;
                 loopEdge->flagsIntern += DUPLICATED_EDGE;
@@ -92,12 +92,12 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
         }
 
         // create a new loop with MakeLoop using the loopverts and loopeedges to create the top face
-        Core::Loop* faceLoop = new Core::Loop();
-        Core::MakeLoop(loopEdges, loopVerts, faceLoop);
+        std::vector<Core::Loop*> faceLoop = m->loopPool.Allocate(loopEdges.size());
+        Core::MakeLoop(m, loopEdges, loopVerts, faceLoop);
 
         // create the face using the new loop
-        Core::Face* newf = new Core::Face();
-        Core::MakeFace(faceLoop, newf);
+        Core::Face* newf = m->facePool.Allocate();
+        Core::MakeFace(m, faceLoop.at(0), newf);
         horizontalFaces.push_back(newf);
     }
 
@@ -123,8 +123,8 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
                 e3 = verticalEdges.at(v0->index);
                 v3 = e3->Other(v0);
             } else {
-                e3 = new Core::Edge();
-                Core::MakeEdge(v0, v3, e3);
+                e3 = m->edgePool.Allocate();
+                Core::MakeEdge(m, v0, v3, e3);
                 verticalEdges.push_back(e3);
                 v0->flagsIntern = EXTRUDED_VERT;
                 v0->index = verticalEdgeIndex;
@@ -134,8 +134,8 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
                 e1 = verticalEdges.at(v1->index);
                 v2 = e1->Other(v1);
             } else {
-                e1 = new Core::Edge();
-                Core::MakeEdge(v1, v2, e1);
+                e1 = m->edgePool.Allocate();
+                Core::MakeEdge(m, v1, v2, e1);
                 verticalEdges.push_back(e1);
                 v1->flagsIntern = EXTRUDED_VERT;
                 v1->index = verticalEdgeIndex;
@@ -156,10 +156,10 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
             }
 
             // make loop. face
-            Core::Loop* newl = new Core::Loop();
-            Core::Face* newf = new Core::Face();
-            Core::MakeLoop(loopEdges, loopVerts, newl);
-            Core::MakeFace(newl, newf);
+            std::vector<Core::Loop*> newl = m->loopPool.Allocate(loopEdges.size());
+            Core::Face* newf = m->facePool.Allocate();
+            Core::MakeLoop(m, loopEdges, loopVerts, newl);
+            Core::MakeFace(m, newl.at(0), newf);
             verticalFaces.push_back(newf);
         }
     }
@@ -167,7 +167,7 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
     // delete or clear flags for original faces;
     if(!keepOrig) {
         for(Core::Face* face : faces) {
-            Core::KillFace(face);
+            Core::KillFace(m, face);
         }
     }
 
@@ -178,7 +178,7 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
             edge->flagsIntern = 0;
         } else {
             if(edge->IsWire()) {
-                Core::KillEdge(edge);
+                Core::KillEdge(m, edge);
             } else {
                 edge->index = 0;
                 edge->flagsIntern = 0;
@@ -189,7 +189,7 @@ const ExtrudeFaceRegionResult ExtrudeFaceRegion(Core::Mesh* m, const std::vector
     // delete or clear flags from original verts
     for(Core::Vert* vert : originalVerts) {
         if(vert->Edges().size() == 0) {
-            Core::KillVert(vert);
+            Core::KillVert(m, vert);
         } else {
             vert->index = 0;
             vert->flagsIntern = 0;

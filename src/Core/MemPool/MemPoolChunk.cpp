@@ -9,46 +9,58 @@ namespace Aoba {
 namespace Core {
 
 template<typename T>
-MemPoolChunk<T>::MemPoolChunk(std::size_t capacity) : bitset(capacity) {
-    data = new T[(capacity / 32 + 1) * 32];
+MemPoolChunk<T>::MemPoolChunk(std::size_t size) {
+    data = new T[size];
+    nextFreeIdx = new std::size_t[size]; 
+    for(std::size_t i = 0; i < size; ++i) {
+        nextFreeIdx[i] = i + 1;
+    }
+    firstFreeIdx = 0;
+    used = 0;
+    capacity = size;
 }
 
 template<typename T>
 MemPoolChunk<T>::~MemPoolChunk() {
     delete[] data;
+    delete[] nextFreeIdx;
 }
 
 template<typename T>
-bool MemPoolChunk<T>::CanAllocateSingle() {
-    return bitset.HasSpaceSingle() > 0;
+bool MemPoolChunk<T>::CanAllocate() {
+    return used < capacity;
 }
 
 template<typename T>
-bool MemPoolChunk<T>::CanAllocateMany(std::size_t count) {
-    return bitset.HasSpaceMany(count);
+bool MemPoolChunk<T>::CanAllocate(std::size_t count) {
+    return count <= (capacity - used);
 }
 
 template<typename T>
-T* MemPoolChunk<T>::AllocateSingle() {
-    std::size_t idx = bitset.NextFree();
-    bitset.Set(idx);
-    data[idx] = T();
-    return &data[idx];
+T* MemPoolChunk<T>::Allocate() {
+    if(!CanAllocate()) {
+        throw;
+    }
+    data[firstFreeIdx] = T();
+    T* result = &data[firstFreeIdx];
+    firstFreeIdx = nextFreeIdx[firstFreeIdx];
+    ++used;
+    return result;
 }
 
 template<typename T>
-std::vector<T*> MemPoolChunk<T>::AllocateMany(std::size_t count) {
-    // first check that all items can be allocated
-    if(!bitset.HasSpaceMany(count)) {
+std::vector<T*> MemPoolChunk<T>::Allocate(std::size_t count) {
+    if(!CanAllocate(count)) { 
         throw;
     }
 
     std::vector<T*> result = std::vector<T*>();
+    result.reserve(count);
     while(count > 0) {
-        std::size_t idx = bitset.NextFree();
-        bitset.Set(idx);
-        result.push_back(data + idx);
-        data[idx] = T();
+        data[firstFreeIdx] = T();
+        result.push_back(&data[firstFreeIdx]);
+        firstFreeIdx = nextFreeIdx[firstFreeIdx];
+        ++used;
         --count;
     }
     
@@ -56,14 +68,14 @@ std::vector<T*> MemPoolChunk<T>::AllocateMany(std::size_t count) {
 }
 
 template<typename T>
-bool MemPoolChunk<T>::IsSingleInChunk(T* item) {
-    return item >= data && item <= data + bitset.Capacity();
+bool MemPoolChunk<T>::IsInChunk(T* item) {
+    return item >= data && item < data + capacity;
 }
 
 template<typename T>
-bool MemPoolChunk<T>::AreManyInChunk(std::vector<T*> items) {
+bool MemPoolChunk<T>::AreInChunk(std::vector<T*> items) {
     for(T* item : items) {
-        if(item <= data || item >= data + bitset.Capacity()) {
+        if(item < data || item >= data + capacity) {
             return false;
         }
     }
@@ -71,37 +83,43 @@ bool MemPoolChunk<T>::AreManyInChunk(std::vector<T*> items) {
 }
 
 template<typename T>
-void MemPoolChunk<T>::FreeSingle(T* item) {
-    bitset.Reset(item - data);
+void MemPoolChunk<T>::Free(T* item) {
+    std::size_t idx = item - data;
+    nextFreeIdx[idx] = firstFreeIdx;
+    firstFreeIdx = idx;
     item = nullptr;
+    --used;
 }
 
 template<typename T>
-void MemPoolChunk<T>::FreeMany(std::vector<T*> items) {
+void MemPoolChunk<T>::Free(std::vector<T*> items) {
     for(T* item : items) {
-        bitset.Reset(item - data);
+        std::size_t idx = item - data;
+        nextFreeIdx[idx] = firstFreeIdx;
+        firstFreeIdx = idx;
         item = nullptr;
+        --used;
     }
 }
 
 template<typename T>
 bool MemPoolChunk<T>::IsEmpty() {
-    return bitset.Empty();
+    return used == 0;
 }
 
 template<typename T>
 bool MemPoolChunk<T>::IsFull() {
-    return bitset.Full();
+    return used == capacity;
 }
 
 template<typename T>
 std::size_t MemPoolChunk<T>::Available() {
-    return bitset.Available();
+    return capacity - used;
 }
 
 template<typename T>
 std::size_t MemPoolChunk<T>::Used() {
-    return bitset.Used();
+    return used;
 }
 
 template class MemPoolChunk<Edge>;

@@ -1,7 +1,6 @@
 #ifndef AOBA_CORE_MEMPOOL_MEMPOOLCHUNK_HPP
 #define AOBA_CORE_MEMPOOL_MEMPOOLCHUNK_HPP
 
-#include "MemPoolBitSet.hpp"
 #include <vector>
 
 namespace Aoba {
@@ -10,28 +9,32 @@ namespace Core {
 template<typename T>
 class MemPoolChunk {
     T* data;
-    MemPoolBitSet bitset;
+    std::size_t capacity;
+    std::size_t used;
+
+    std::size_t firstFreeIdx;
+    std::size_t* nextFreeIdx;
 
   public:
-    MemPoolChunk(std::size_t capacity);
+    MemPoolChunk(std::size_t size);
 
     ~MemPoolChunk();
 
-    bool CanAllocateSingle();
+    bool CanAllocate();
 
-    bool CanAllocateMany(std::size_t count);
+    bool CanAllocate(std::size_t count);
 
-    T* AllocateSingle();
+    T* Allocate();
 
-    std::vector<T*> AllocateMany(std::size_t count);
+    std::vector<T*> Allocate(std::size_t count);
 
-    bool IsSingleInChunk(T* item);
+    bool IsInChunk(T* item);
 
-    bool AreManyInChunk(std::vector<T*> items);
+    bool AreInChunk(std::vector<T*> items);
 
-    void FreeSingle(T* item);
+    void Free(T* item);
 
-    void FreeMany(std::vector<T*> items);
+    void Free(std::vector<T*> items);
 
     bool IsEmpty();
 

@@ -3,9 +3,10 @@
 
 #include "../../Math/Matrix/Matrix4.hpp"
 #include "../EulerOps.hpp"
+#include "../MemPool.hpp"
 
-#include <vector>
 #include <functional>
+#include <vector>
 
 namespace Aoba {
 namespace Core {
@@ -15,19 +16,25 @@ class Edge;
 class Face;
 
 class Mesh {
-    friend void EdgeSplit(Edge*, Vert*, Edge*, Vert*);
-    friend void KillEdge(Edge*);
-    friend void KillFace(Face*);
+    friend void EdgeSplit(Mesh*, Edge*, Vert*, Edge*, Vert*);
+    friend void KillEdge(Mesh*, Edge*);
+    friend void KillFace(Mesh*, Face*);
     friend void KillMesh(Mesh*);
-    friend void KillVert(Vert*);
-    friend void MakeEdge(Vert*, Vert*, Edge*);
-    friend void MakeEdgeVert(Vert*, Edge*, Vert*);
-    friend void MakeFace(Loop*, Face*);
+    friend void KillVert(Mesh*, Vert*);
+    friend void MakeEdge(Mesh*, Vert*, Vert*, Edge*);
+    friend void MakeEdgeVert(Mesh*, Vert*, Edge*, Vert*);
+    friend void MakeFace(Mesh*, Loop*, Face*);
     friend void MakeVert(Mesh*, Vert*);
-    friend void GlueVert(Vert*, Vert*);
-    friend void ManifoldMakeEdge(Vert*, Vert*, Face*, Edge*, Face*);
-    friend void DissolveEdge(Edge*, Face*);
+    friend void GlueVert(Mesh*, Vert*, Vert*);
+    friend void ManifoldMakeEdge(Mesh*, Vert*, Vert*, Face*, Edge*, Face*);
+    friend void DissolveEdge(Mesh*, Edge*, Face*);
     friend void JoinMesh(Mesh*, Mesh*);
+
+  public:
+    MemPool<Vert> vertPool;
+    MemPool<Edge> edgePool;
+    MemPool<Face> facePool;
+    MemPool<Loop> loopPool;
 
   private:
     Vert* verts; // List of all verts in the mesh.

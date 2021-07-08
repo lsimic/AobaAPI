@@ -4,7 +4,7 @@
 namespace Aoba {
 namespace Core {
 
-void KillFace(Face* f) {
+void KillFace(Mesh* m, Face* f) {
     // iterate over all face loops
     Loop* currentLoop = f->l;
     do {
@@ -23,7 +23,7 @@ void KillFace(Face* f) {
 
         Loop* toDelete = currentLoop;
         currentLoop = currentLoop->fNext;
-        delete toDelete;
+        m->loopPool.Free(toDelete);
     } while(currentLoop != f->l);
 
     // remove face from list of faces in mesh.
@@ -38,7 +38,7 @@ void KillFace(Face* f) {
     }
 
     // delete face
-    delete f;
+    m->facePool.Free(f);
 }
 
 } // namespace Core

@@ -4,7 +4,7 @@
 namespace Aoba {
 namespace Core {
 
-void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv) {
+void EdgeSplit(Mesh* m, Edge* e, Vert* v, Edge* newe, Vert* newv) {
     newe->m = e->m;
     newv->m = e->m; // v can be nullptr
     // add the new edge between the appropriate verts
@@ -52,7 +52,7 @@ void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv) {
             Loop* current = e->l;
             std::vector<Loop*> newLoops = std::vector<Loop*>();
             do {
-                Loop* newl = new Loop();
+                Loop* newl = m->loopPool.Allocate();
                 newl->f = current->f;
                 newl->e = newe;
                 newl->m = e->m;
@@ -133,7 +133,7 @@ void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv) {
             Loop* current = e->l;
             std::vector<Loop*> newLoops = std::vector<Loop*>();
             do {
-                Loop* newl = new Loop();
+                Loop* newl = m->loopPool.Allocate();
                 newl->f = current->f;
                 newl->e = newe;
                 newl->m = e->m;
@@ -174,7 +174,6 @@ void EdgeSplit(Edge* e, Vert* v, Edge* newe, Vert* newv) {
     }
 
     // add newe, newv to mesh...
-    Mesh* m = e->m;
     m->edges->mPrev->mNext = newe;
     newe->mPrev = m->edges->mPrev;
     m->edges->mPrev = newe;

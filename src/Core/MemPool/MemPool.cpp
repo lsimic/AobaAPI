@@ -10,43 +10,38 @@ namespace Core {
 
 template<typename T>
 MemPool<T>::MemPool() {
-    chunks = std::vector<MemPoolChunk<T>>();
+    chunks = std::vector<MemPoolChunk<T>*>();
 }
 
 template<typename T>
-bool MemPool<T>::HasChunks() {
-    return chunks.size();
-}
-
-template<typename T>
-T* MemPool<T>::AllocateSingle() {
+T* MemPool<T>::Allocate() {
     // TODO: could perhaps implement a way to mark the first/last full/empty chunk
     // to avoid looping over all chunks
-    if(HasChunks()) {
-        for(auto it = chunks.rbegin(); it != chunks.rend(); ++it) {
-            if(!(*it).IsFull()) {
-                // found a chunk with some space and got a pointer.
-                return (*it).AllocateSingle();
+    if(chunks.size()) {
+        for(MemPoolChunk<T>* chunk : chunks) {
+            if(chunk->CanAllocate()) {
+                return chunk->Allocate();
             }
         }
     }
     // no chunks with space available, create a new chunk
-    MemPoolChunk<T> chunk = MemPoolChunk<T>(32);
+    MemPoolChunk<T>* chunk = new MemPoolChunk<T>(32);
     chunks.push_back(chunk);
-    return chunk.AllocateSingle();
+    return chunk->Allocate();
 }
 
 template<typename T>
-void MemPool<T>::FreeSingle(T* item) {
-    if(HasChunks()) {
+void MemPool<T>::Free(T* item) {
+    if(chunks.size()) {
         for(auto it = chunks.begin(); it != chunks.end(); ++it) {
-            if((*it).IsSingleInChunk(item)) {
-                (*it).FreeSingle(item);
-                if((*it).IsEmpty()) {
-                    chunks.erase(it);
-                }
-                return;
+            MemPoolChunk<T>* chunk = (*it);
+            if(chunk->IsInChunk(item)) {
+                chunk->Free(item);
             }
+            if(chunk->IsEmpty()) {
+                chunks.erase(it);
+            }
+            return;
         }
         throw; // data not found in mempool
     }
@@ -54,21 +49,21 @@ void MemPool<T>::FreeSingle(T* item) {
 }
 
 template<typename T>
-std::vector<T*> MemPool<T>::AllocateMany(std::size_t count) {
+std::vector<T*> MemPool<T>::Allocate(std::size_t count) {
     std::vector<T*> result = std::vector<T*>();
     result.reserve(count);
 
-    if(HasChunks()) {
+    if(chunks.size()) {
         for(auto it = chunks.rbegin(); it != chunks.rend(); ++it) {
-            if(!(*it).IsFull()) {
+            if(!(*it)->IsFull()) {
                 // found a chunk with some space available
-                if(count < (*it).Available()) {
-                    std::vector<T*> allocated = (*it).AllocateMany(count);
+                if(count < (*it)->Available()) {
+                    std::vector<T*> allocated = (*it)->Allocate(count);
                     result.insert(result.end(), allocated.begin(), allocated.end());
                     return result;
                 } else {
-                    count = count - (*it).Available();
-                    std::vector<T*> allocated = (*it).AllocateMany((*it).Available());
+                    count = count - (*it)->Available();
+                    std::vector<T*> allocated = (*it)->Allocate((*it)->Available());
                     result.insert(result.end(), allocated.begin(), allocated.end());
                 }
             }
@@ -76,33 +71,34 @@ std::vector<T*> MemPool<T>::AllocateMany(std::size_t count) {
     }
     // filled all available chunks, create a new chunk to fit the rest
     // no chunks with space available, create a new chunk that can fit the remaining elements
-    MemPoolChunk<T> chunk = MemPoolChunk<T>(count);
+    std::size_t size = (count < 32) ? 32 : count; 
+    MemPoolChunk<T>* chunk = new MemPoolChunk<T>(size); 
     chunks.push_back(chunk);
-    std::vector<T*> allocated = chunk.AllocateMany(count);
+    std::vector<T*> allocated = chunk->Allocate(count);
     result.insert(result.end(), allocated.begin(), allocated.end());
     return result;
 }
 
 template<typename T>
-std::vector<T*> MemPool<T>::AllocateContinous(std::size_t count) {
-    MemPoolChunk<T> chunk = MemPoolChunk<T>(count);
-    chunks.push_back(chunk);
-    return chunk.AllocateMany(count);
-}
-
-template<typename T>
-void MemPool<T>::FreeMany(std::vector<T*> items) {
+void MemPool<T>::Free(std::vector<T*> items) {
     for(T* ptr : items) {
-        for(MemPoolChunk<T> chunk : chunks) {
-            if(chunk.IsSingleInChunk(ptr)) {
+        for(MemPoolChunk<T>* chunk : chunks) {
+            if(chunk->IsInChunk(ptr)) {
                 // found chunk which keeps this ptr
-                chunk.FreeSingle(ptr);
+                chunk->Free(ptr);
                 break;
             }
             // ptr not found in any chunks, throw an exception
             throw;
         }
     }
+}
+
+template<typename T>
+void MemPool<T>::Reserve(std::size_t count) { 
+    count = (count < 32) ? 32 : count; 
+    MemPoolChunk<T>* chunk = new MemPoolChunk<T>(count);
+    chunks.push_back(chunk);
 }
 
 template class MemPool<Edge>;
