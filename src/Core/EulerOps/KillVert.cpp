@@ -13,17 +13,6 @@ void KillVert(Mesh* m, Vert* v) {
         }
     }
 
-    // remove vert from list of verts in mesh.
-    if(v->mNext == v && v->mPrev == v) {
-        v->m->verts = nullptr;
-    } else {
-        v->mPrev->mNext = v->mNext;
-        v->mNext->mPrev = v->mPrev;
-        if(v->m->verts == v) {
-            v->m->verts = v->mNext;
-        }
-    }
-
     m->vertPool.Free(v);
 }
 

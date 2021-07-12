@@ -317,26 +317,10 @@ void GlueVert(Mesh* m, Vert* v1, Vert* v2) {
             prev->v2Next = next;
         }
 
-        // remove edge from mesh list of edges
-        if(edge->mNext == edge && edge->mPrev == edge) {
-            edge->m->edges = nullptr;
-        } else {
-            edge->mPrev->mNext = edge->mNext;
-            edge->mNext->mPrev = edge->mPrev;
-            if(edge->m->edges == edge) {
-                edge->m->edges = edge->mNext;
-            }
-        }
         m->edgePool.Free(edge);
     }
 
-    // remove v2 from mesh list of verts
-    // not checking if v2 is last, because v1 must remain
-    v2->mPrev->mNext = v2->mNext;
-    v2->mNext->mPrev = v2->mPrev;
-    if(v2->m->verts == v2) {
-        v2->m->verts = v2->mNext;
-    }
+    // remove v2 from mesh
     m->vertPool.Free(v2);
 
     return;

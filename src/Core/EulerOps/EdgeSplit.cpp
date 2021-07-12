@@ -172,19 +172,6 @@ void EdgeSplit(Mesh* m, Edge* e, Vert* v, Edge* newe, Vert* newv) {
         newe->v1 = newv;
         e->v2 = newv;
     }
-
-    // add newe, newv to mesh...
-    m->edges->mPrev->mNext = newe;
-    newe->mPrev = m->edges->mPrev;
-    m->edges->mPrev = newe;
-    newe->mNext = m->edges;
-    m->edges = newe;
-
-    m->verts->mPrev->mNext = newv;
-    newv->mPrev = m->verts->mPrev;
-    m->verts->mPrev = newv;
-    newv->mNext = m->verts;
-    m->verts = newv;
 }
 
 } // namespace Core

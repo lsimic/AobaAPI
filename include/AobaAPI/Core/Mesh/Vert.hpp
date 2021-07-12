@@ -37,8 +37,6 @@ class Vert {
   private:
     Edge* e;     // List of edges using this vert. Use e->v1/v2 Next/Prev for traversal.
     Mesh* m;     // Pointer to parent mesh. Could potentialy be ommited but might pose a safety issue.
-    Vert* mNext; // list of all verts in the mesh
-    Vert* mPrev; // List of all verts in the mesh
   public:
     Vert();
 

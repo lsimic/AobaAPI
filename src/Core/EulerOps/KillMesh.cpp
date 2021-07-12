@@ -5,31 +5,9 @@ namespace Aoba {
 namespace Core {
 
 void KillMesh(Mesh* m) {
-    // could be done faster, but im lazy...
-
-    // kill all faces (therefore loops and looplists)
-    if(m->faces != nullptr) {
-        std::vector<Face*> faces = m->Faces();
-        for(Face* f : faces) {
-            KillFace(m, f);
-        }
-    }
-
-    // delete all edges(without killing faces as there are none)
-    if(m->edges != nullptr) {
-        std::vector<Edge*> edges = m->Edges();
-        for(Edge* e : edges) {
-            KillEdge(m, e);
-        }
-    }
-
-    // delete all verts(without deleting edges as there are none)
-    if(m->verts != nullptr) {
-        std::vector<Vert*> verts = m->Verts();
-        for(Vert* v : verts) {
-            KillVert(m, v);
-        }
-    }
+    // not sure if this is even necessary any more. 
+    // as there is no need to iterate over mesh elements
+    // since all mesh elements are destroyed when the mesh and it's mempools are destroyed.
 
     delete m;
 }

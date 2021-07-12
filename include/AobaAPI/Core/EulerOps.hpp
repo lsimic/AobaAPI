@@ -211,13 +211,6 @@ void MakeVert(Mesh* m, Vert* newv);
 /// </exception>
 void ManifoldMakeEdge(Mesh* m, Vert* v1, Vert* v2, Face* f, Edge* newe, Face* newf);
 
-/// <summary>
-/// Joins the mesh m2 into the mesh m1, deleting the mesh m2. Referecens to all elements of mesh 2 remain valid. 
-/// </summary>
-/// <param name="m1">The surviving mesh</param>
-/// <param name="m2">The other mesh</param>
-void JoinMesh(Mesh* m1, Mesh* m2);
-
 } // namespace Core
 } // namespace Aoba
 

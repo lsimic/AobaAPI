@@ -36,16 +36,16 @@ class Mesh {
     MemPool<Face> facePool;
     MemPool<Loop> loopPool;
 
-  private:
-    Vert* verts; // List of all verts in the mesh.
-    Edge* edges; // List of all edges in the mesh.
-    Face* faces; // list of all faces in the mesh.
-                 // List of loops is omitted, because loops can be easily accessed using faces.
-  public:
     /// <summary>
     /// Constructor, initializes empty lists for verts, edges and faces.
     /// </summary>
     Mesh();
+
+    /// <summary>
+    /// Merges all elements of the other mesh into this mesh and deletes the other mesh
+    /// </summary>
+    /// <param name="other">Mesh to be merged</param>
+    void Join(Mesh* other);
 
     /// <summary>
     /// Checks wether the mesh is in a valid state.

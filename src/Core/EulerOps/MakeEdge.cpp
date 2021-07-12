@@ -18,22 +18,6 @@ void MakeEdge(Mesh* m, Vert* v1, Vert* v2, Edge* newe) {
         }
     }
 
-    // add newe to the mesh.
-    // mesh might not have any edges at this point.
-    if(m->edges == nullptr) {
-        // empty mesh case
-        m->edges = newe;
-        newe->mNext = newe;
-        newe->mPrev = newe;
-    } else {
-        // some edges already exist
-        m->edges->mPrev->mNext = newe;
-        newe->mPrev = m->edges->mPrev;
-        m->edges->mPrev = newe;
-        newe->mNext = m->edges;
-        m->edges = newe;
-    }
-
     // add verts v1 and v2 to edge, set loops to nullptr
     newe->v1 = v1;
     newe->v2 = v2;

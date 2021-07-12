@@ -12,8 +12,6 @@ namespace Core {
 Face::Face() {
     l = nullptr;
     m = nullptr;
-    mNext = nullptr;
-    mPrev = nullptr;
     index = 0;
     flags = 0;
     flagsIntern = 0;

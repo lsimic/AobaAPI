@@ -15,8 +15,6 @@ Vert::Vert() {
     flagsIntern = 0;
     e = nullptr;
     m = nullptr;
-    mNext = nullptr;
-    mPrev = nullptr;
 }
 
 bool Vert::IsBoundary() const {

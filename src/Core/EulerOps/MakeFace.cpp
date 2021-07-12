@@ -16,19 +16,6 @@ void MakeFace(Mesh* m, Loop* loop, Face* newf) {
         current = current->fNext;
     } while(current != loop);
 
-    // add newf to mesh
-    if(m->faces == nullptr) {
-        m->faces = newf;
-        newf->mNext = newf;
-        newf->mPrev = newf;
-    } else {
-        m->faces->mPrev->mNext = newf;
-        newf->mPrev = m->faces->mPrev;
-        m->faces->mPrev = newf;
-        newf->mNext = m->faces;
-        m->faces = newf;
-    }
-
     // link face to mesh
     newf->m = m;
 }

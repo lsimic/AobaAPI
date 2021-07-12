@@ -41,7 +41,6 @@ T* MemPoolChunk<T>::Allocate() {
     if(!CanAllocate()) {
         throw;
     }
-    data[firstFreeIdx] = T();
     T* result = &data[firstFreeIdx];
     firstFreeIdx = nextFreeIdx[firstFreeIdx];
     ++used;
@@ -57,7 +56,6 @@ std::vector<T*> MemPoolChunk<T>::Allocate(std::size_t count) {
     std::vector<T*> result = std::vector<T*>();
     result.reserve(count);
     while(count > 0) {
-        data[firstFreeIdx] = T();
         result.push_back(&data[firstFreeIdx]);
         firstFreeIdx = nextFreeIdx[firstFreeIdx];
         ++used;
@@ -87,6 +85,7 @@ void MemPoolChunk<T>::Free(T* item) {
     std::size_t idx = item - data;
     nextFreeIdx[idx] = firstFreeIdx;
     firstFreeIdx = idx;
+    *item = T();
     item = nullptr;
     --used;
 }
@@ -97,6 +96,7 @@ void MemPoolChunk<T>::Free(std::vector<T*> items) {
         std::size_t idx = item - data;
         nextFreeIdx[idx] = firstFreeIdx;
         firstFreeIdx = idx;
+        *item = T();
         item = nullptr;
         --used;
     }

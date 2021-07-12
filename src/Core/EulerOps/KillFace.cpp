@@ -26,17 +26,6 @@ void KillFace(Mesh* m, Face* f) {
         m->loopPool.Free(toDelete);
     } while(currentLoop != f->l);
 
-    // remove face from list of faces in mesh.
-    if(f->mNext == f && f->mPrev == f) {
-        f->m->faces = nullptr;
-    } else {
-        f->mPrev->mNext = f->mNext;
-        f->mNext->mPrev = f->mPrev;
-        if(f->m->faces == f) {
-            f->m->faces = f->mNext;
-        }
-    }
-
     // delete face
     m->facePool.Free(f);
 }

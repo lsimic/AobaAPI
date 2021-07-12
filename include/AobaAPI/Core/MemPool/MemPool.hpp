@@ -11,12 +11,18 @@ namespace Core {
 // TODO: a "reserve" method could be usefull,
 // it would reserve the memory required, without givinf it to specific element
 
+class Mesh;
+
 template<typename T>
 class MemPool {
+    friend class Mesh;
+
     std::vector<MemPoolChunk<T>*> chunks;
 
   public:
     MemPool();
+
+    ~MemPool();
 
     T* Allocate();
 

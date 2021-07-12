@@ -48,8 +48,6 @@ class Edge {
     Edge* v2Next; // List of edges around v2
     Edge* v2Prev; // List of edges around v2
     Mesh* m;      // Pointer to parent mesh. Could potentialy be ommited but might pose a safety issue.
-    Edge* mNext;  // list of all edges in the mesh
-    Edge* mPrev;  // List of all edges in the mesh
 
     /// <summary>
     /// Get the next edge in the list of edges around vert v

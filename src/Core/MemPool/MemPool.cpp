@@ -14,6 +14,13 @@ MemPool<T>::MemPool() {
 }
 
 template<typename T>
+MemPool<T>::~MemPool() {
+    for(MemPoolChunk<T>* chunk : chunks) {
+        delete chunk;
+    }
+}
+
+template<typename T>
 T* MemPool<T>::Allocate() {
     // TODO: could perhaps implement a way to mark the first/last full/empty chunk
     // to avoid looping over all chunks

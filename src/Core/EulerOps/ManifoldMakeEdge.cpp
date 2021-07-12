@@ -71,13 +71,8 @@ void ManifoldMakeEdge(Mesh* m, Vert* v1, Vert* v2, Face* f, Edge* newe, Face* ne
         current = current->fNext;
     }
 
-    // add newf to list of faces in mesh
+    // set mesh pointer for new face
     newf->m = m;
-    m->faces->mPrev->mNext = newf;
-    newf->mPrev = m->faces->mPrev;
-    m->faces->mPrev = newf;
-    newf->mNext = m->faces;
-    m->faces = newf;
 
     return;
 }

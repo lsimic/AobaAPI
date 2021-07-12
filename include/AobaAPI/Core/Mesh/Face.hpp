@@ -30,8 +30,6 @@ class Face {
   private:
     Loop* l;     // First loop in a list of loops which form the face boundary. use fNext/fPrev for traversal
     Mesh* m;     // Pointer to parent mesh. Could potentialy be ommited but might pose a safety issue.
-    Face* mNext; // list of all faces in the mesh
-    Face* mPrev; // List of all faces in the mesh
   public:
     std::size_t index;   // index of this vert, not updated automatically, used for tools
     int32_t flags;       // flags available for use in other tools

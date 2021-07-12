@@ -60,18 +60,6 @@ void KillEdge(Mesh* m, Edge* e) {
             e->v2Next->v1Prev = e->v2Prev;
         }
     }
-    // TODO: does this work with single vertex edges?
-
-    // remove edge from list of edges in mesh.
-    if(e->mNext == e && e->mPrev == e) {
-        e->m->edges = nullptr;
-    } else {
-        e->mPrev->mNext = e->mNext;
-        e->mNext->mPrev = e->mPrev;
-        if(e->m->edges == e) {
-            e->m->edges = e->mNext;
-        }
-    }
 
     m->edgePool.Free(e);
 }

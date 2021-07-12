@@ -68,11 +68,6 @@ void DissolveEdge(Mesh* m, Edge* e, Face* fSurvivor) {
     m->loopPool.Free(survLoop);
 
     // delete the other face
-    other->mPrev->mNext = other->mNext;
-    other->mNext->mPrev = other->mPrev;
-    if(other->m->faces == other) {
-        other->m->faces = other->mNext;
-    }
     m->facePool.Free(other);
 
     return;

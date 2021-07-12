@@ -2,12 +2,17 @@
 #define AOBA_CORE_MEMPOOL_MEMPOOLCHUNK_HPP
 
 #include <vector>
+#include "../EulerOps.hpp"
 
 namespace Aoba {
 namespace Core {
 
+class Mesh;
+
 template<typename T>
 class MemPoolChunk {
+    friend class Mesh;
+
     T* data;
     std::size_t capacity;
     std::size_t used;

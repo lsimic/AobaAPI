@@ -7,7 +7,6 @@ target_sources(
 	${CMAKE_CURRENT_SOURCE_DIR}/GlueEdge.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GlueFace.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GlueVert.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/JoinMesh.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillEdge.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillFace.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KillMesh.cpp

@@ -21,8 +21,6 @@ Edge::Edge() {
     v2Next = nullptr;
     v2Prev = nullptr;
     m = nullptr;
-    mNext = nullptr;
-    mPrev = nullptr;
 }
 
 Edge* Edge::Next(const Vert* v) const {
